@@ -102,6 +102,84 @@ CREATE TABLE IF NOT EXISTS watchlist_items (
     UNIQUE (watchlist_id, symbol),
     FOREIGN KEY (watchlist_id) REFERENCES watchlists (id) ON DELETE CASCADE
 );
+
+-- Phase 6: Option Chain & IV Analytics
+CREATE TABLE IF NOT EXISTS option_chain_cache (
+    symbol          TEXT NOT NULL,
+    expiry_date     TEXT NOT NULL,
+    strike_price    REAL NOT NULL,
+    option_type     TEXT NOT NULL, -- 'CE' or 'PE'
+    open_interest   INTEGER DEFAULT 0,
+    change_in_oi    INTEGER DEFAULT 0,
+    implied_vol     REAL DEFAULT 0.0,
+    delta           REAL DEFAULT 0.0,
+    gamma           REAL DEFAULT 0.0,
+    theta           REAL DEFAULT 0.0,
+    vega            REAL DEFAULT 0.0,
+    ltp             REAL DEFAULT 0.0,
+    volume          INTEGER DEFAULT 0,
+    updated_at      TEXT NOT NULL,
+    PRIMARY KEY (symbol, expiry_date, strike_price, option_type)
+);
+
+CREATE TABLE IF NOT EXISTS historical_iv (
+    symbol          TEXT NOT NULL,
+    date            TEXT NOT NULL,
+    iv_close        REAL NOT NULL,
+    hv_30           REAL NOT NULL,
+    PRIMARY KEY (symbol, date)
+);
+
+-- Phase 7: Real-Time Alerts & Notification Logs
+CREATE TABLE IF NOT EXISTS user_alerts (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    name            TEXT NOT NULL,
+    alert_type      TEXT NOT NULL, -- 'PRICE_CROSS', 'SCANNER_HIT', 'ADR_CLIMAX'
+    symbol          TEXT,
+    condition_json  TEXT NOT NULL,
+    channels        TEXT NOT NULL, -- 'TELEGRAM,DISCORD,BROWSER'
+    is_active       INTEGER DEFAULT 1,
+    last_triggered  TEXT,
+    created_at      TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS alert_logs (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    alert_id        INTEGER NOT NULL,
+    symbol          TEXT NOT NULL,
+    message         TEXT NOT NULL,
+    channel         TEXT NOT NULL,
+    status          TEXT NOT NULL, -- 'SENT', 'FAILED'
+    triggered_at    TEXT NOT NULL,
+    FOREIGN KEY (alert_id) REFERENCES user_alerts (id) ON DELETE CASCADE
+);
+
+-- Phase 8: Paper Trading & Broker Orders
+CREATE TABLE IF NOT EXISTS paper_orders (
+    order_id        TEXT PRIMARY KEY,
+    symbol          TEXT NOT NULL,
+    side            TEXT NOT NULL, -- 'BUY', 'SELL'
+    order_type      TEXT NOT NULL, -- 'MARKET', 'LIMIT', 'SL'
+    quantity        INTEGER NOT NULL,
+    price           REAL NOT NULL,
+    status          TEXT NOT NULL, -- 'FILLED', 'REJECTED', 'CANCELLED'
+    created_at      TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS paper_positions (
+    symbol          TEXT PRIMARY KEY,
+    quantity        INTEGER NOT NULL,
+    avg_price       REAL NOT NULL,
+    current_price   REAL NOT NULL,
+    realized_pnl    REAL DEFAULT 0.0,
+    updated_at      TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS broker_settings (
+    key             TEXT PRIMARY KEY,
+    value           TEXT NOT NULL,
+    updated_at      TEXT NOT NULL
+);
 """
 
 

@@ -16,7 +16,7 @@ const CHART_TIMEFRAMES = [
   { label: 'M', value: '1MO' }
 ]
 
-export function ChartPanel({ symbol, stockMeta }) {
+export function ChartPanel({ symbol, stockMeta, onOpenOptionChain, onOpenTradingDesk }) {
   const chartContainerRef = useRef(null)
   const rsiContainerRef = useRef(null)
   const macdContainerRef = useRef(null)
@@ -593,6 +593,25 @@ export function ChartPanel({ symbol, stockMeta }) {
                 {tf.label}
               </button>
             ))}
+          </div>
+
+          <div style={{ display: 'flex', gap: '6px', marginLeft: '8px' }}>
+            <button
+              className="tf-btn"
+              style={{ color: '#38bdf8', borderColor: 'rgba(56, 189, 248, 0.3)', background: 'rgba(56, 189, 248, 0.1)', fontWeight: 600 }}
+              onClick={() => onOpenOptionChain && onOpenOptionChain(symbol)}
+              title="Open Real-time Option Chain & Greeks Ladder"
+            >
+              ⚡ Chain
+            </button>
+            <button
+              className="tf-btn"
+              style={{ color: '#4ade80', borderColor: 'rgba(34, 197, 94, 0.3)', background: 'rgba(34, 197, 94, 0.1)', fontWeight: 600 }}
+              onClick={() => onOpenTradingDesk && onOpenTradingDesk({ symbol, ltp: stockMeta?.ltp || 0 })}
+              title="Quick Trade in Paper or Live Desk"
+            >
+              💼 Trade
+            </button>
           </div>
         </div>
 

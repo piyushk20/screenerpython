@@ -7,6 +7,8 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional
 import pandas as pd
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import quantstats as qs
 
 

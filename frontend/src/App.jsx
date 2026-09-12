@@ -6,6 +6,9 @@ import { HeaderTicker } from './components/HeaderTicker.jsx'
 import { ScannerPanel } from './components/ScannerPanel.jsx'
 import { ChartPanel } from './components/ChartPanel.jsx'
 import { BacktestLab } from './components/BacktestLab.jsx'
+import OptionChainModal from './components/OptionChainModal.jsx'
+import AlertsManagerModal from './components/AlertsManagerModal.jsx'
+import TradingDeskModal from './components/TradingDeskModal.jsx'
 import {
   BarChart2, ScanSearch, PlusCircle, Play, Trash2, Edit3,
   RefreshCw, TrendingUp, TrendingDown, Activity, Clock,
@@ -1798,6 +1801,10 @@ function DextDashboard({ toast }) {
   const [layoutMode, setLayoutMode] = useState('split')
   const [status, setStatus] = useState('LIVE')
   const [activeView, setActiveView] = useState('screener') // 'screener' | 'backtest'
+  const [showOptionChain, setShowOptionChain] = useState(false)
+  const [showAlerts, setShowAlerts] = useState(false)
+  const [showTradingDesk, setShowTradingDesk] = useState(false)
+  const [tradePreFill, setTradePreFill] = useState(null)
 
   useEffect(() => {
     api.getMarketIndices()
@@ -1864,6 +1871,12 @@ function DextDashboard({ toast }) {
         loading={loading}
         activeView={activeView}
         onChangeView={setActiveView}
+        onOpenOptions={() => setShowOptionChain(true)}
+        onOpenAlerts={() => setShowAlerts(true)}
+        onOpenDesk={() => {
+          setTradePreFill({ symbol: activeSymbol, ltp: selectedStockMeta?.ltp || 0 })
+          setShowTradingDesk(true)
+        }}
       />
       
       {activeView === 'backtest' ? (
@@ -1897,10 +1910,53 @@ function DextDashboard({ toast }) {
           <ChartPanel
             symbol={activeSymbol}
             stockMeta={selectedStockMeta}
+            onOpenOptionChain={(sym) => {
+              setActiveSymbol(sym)
+              setShowOptionChain(true)
+            }}
+            onOpenTradingDesk={(preFill) => {
+              setTradePreFill(preFill)
+              setShowTradingDesk(true)
+            }}
           />
         </div>
+      )}
+
+      {/* Phase 6: Real-time Option Chain Modal */}
+      {showOptionChain && (
+        <OptionChainModal
+          symbol={activeSymbol}
+          onClose={() => setShowOptionChain(false)}
+          onTradeStrike={(strikeData) => {
+            setShowOptionChain(false)
+            setTradePreFill({
+              symbol: `${strikeData.symbol} ${strikeData.strike} ${strikeData.type}`,
+              side: 'BUY',
+              ltp: strikeData.ltp,
+              lotSize: strikeData.lotSize
+            })
+            setShowTradingDesk(true)
+          }}
+        />
+      )}
+
+      {/* Phase 7: Real-Time Alerts & Webhooks Modal */}
+      {showAlerts && (
+        <AlertsManagerModal
+          activeSymbol={activeSymbol}
+          onClose={() => setShowAlerts(false)}
+        />
+      )}
+
+      {/* Phase 8: Trading Desk & Broker Order Modal */}
+      {showTradingDesk && (
+        <TradingDeskModal
+          tradePreFill={tradePreFill}
+          onClose={() => setShowTradingDesk(false)}
+        />
       )}
     </div>
   )
 }
+
 

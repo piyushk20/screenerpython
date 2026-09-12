@@ -1,7 +1,19 @@
 import React from 'react'
 import { Layout, Layers, RefreshCw, TrendingUp } from 'lucide-react'
 
-export function HeaderTicker({ indices, status, layoutMode, onChangeLayout, onRefresh, loading, activeView = 'screener', onChangeView }) {
+export function HeaderTicker({
+  indices,
+  status,
+  layoutMode,
+  onChangeLayout,
+  onRefresh,
+  loading,
+  activeView = 'screener',
+  onChangeView,
+  onOpenOptions,
+  onOpenAlerts,
+  onOpenDesk,
+}) {
   return (
     <div className="dext-header-bar">
       <div className="dext-brand">
@@ -71,6 +83,33 @@ export function HeaderTicker({ indices, status, layoutMode, onChangeLayout, onRe
             </button>
           </div>
         )}
+
+        <button
+          className="layout-btn"
+          style={{ color: '#38bdf8', borderColor: 'rgba(56, 189, 248, 0.3)' }}
+          onClick={onOpenOptions}
+          title="Open Real-time Option Chain & Greeks Ladder"
+        >
+          <span>⚡ Option Chain</span>
+        </button>
+
+        <button
+          className="layout-btn"
+          style={{ color: '#fbbf24', borderColor: 'rgba(251, 191, 36, 0.3)' }}
+          onClick={onOpenAlerts}
+          title="Manage Real-time Alerts & Webhooks"
+        >
+          <span>🔔 Alerts</span>
+        </button>
+
+        <button
+          className="layout-btn"
+          style={{ color: '#4ade80', borderColor: 'rgba(74, 222, 128, 0.3)' }}
+          onClick={onOpenDesk}
+          title="Open Paper & Live Trading Desk"
+        >
+          <span>💼 Trade Desk</span>
+        </button>
 
         {activeView === 'screener' && (
           <button

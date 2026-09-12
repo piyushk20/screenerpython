@@ -42,23 +42,23 @@ Tracked features, architectural milestones, and planned enhancements for the **N
 ## 🚀 In Progress & Upcoming Roadmap
 
 ### Phase 6: Advanced Options & Greeks
-- [ ] **Real-Time Option Chain**: Live call/put open interest (OI) breakdown, change in OI, volume, and strike-wise/total PCR (Put-Call Ratio).
-- [ ] **Max Pain & Key Strike Levels**: Dynamic Max Pain solver, Highest Call OI (resistance) & Highest Put OI (support).
-- [ ] **Implied Volatility (IV) Analytics**: Numerical IV solver, 30-day Historical Volatility (HV), IV Percentile (IVP), and IV Rank (IVR).
-- [ ] **Analytical Greeks Calculation**: Vectorized pure-Python Black-Scholes Delta ($\Delta$), Gamma ($\Gamma$), Theta ($\Theta$), and Vega ($\mathcal{V}$) for liquid weekly/monthly strikes.
-- [ ] **Option Chain Visual UI**: Interactive strike ladder modal with Call/Put bars, Greeks badges, and IV smile plot.
+- [x] **Real-Time Option Chain**: Live call/put open interest (OI) breakdown, change in OI, volume, and strike-wise/total PCR (Put-Call Ratio).
+- [x] **Max Pain & Key Strike Levels**: Dynamic Max Pain solver, Highest Call OI (resistance) & Highest Put OI (support).
+- [x] **Implied Volatility (IV) Analytics**: Numerical IV solver, 30-day Historical Volatility (HV), IV Percentile (IVP), and IV Rank (IVR).
+- [x] **Analytical Greeks Calculation**: Vectorized pure-Python Black-Scholes Delta ($\Delta$), Gamma ($\Gamma$), Theta ($\Theta$), and Vega ($\mathcal{V}$) for liquid weekly/monthly strikes.
+- [x] **Option Chain Visual UI**: Interactive strike ladder modal with Call/Put bars, Greeks badges, and IV smile plot.
 
 ### Phase 7: Real-Time Alerts & Webhooks
-- [ ] **Unified Background Alert Engine**: Async market-hours scheduler evaluating active triggers every 60 seconds with anti-spam cooldowns.
-- [ ] **Telegram Bot Notifications**: Automated Markdown trade alerts with current price, ADR % from LOD, RSI, and direct chart links.
-- [ ] **Discord Webhook Alerts**: Formatted embed notifications with color-coded severity (Green = Breakout, Red = Breakdown, Orange = ADR Climax).
-- [ ] **Custom Price Cross Alerts**: User-defined price triggers (`>`, `<`, `crosses_above`, `trailing_stop`).
-- [ ] **Browser Push Notifications**: HTML5 Notifications API integration for native desktop popups.
-- [ ] **Alerts Management UI**: Modal to create, pause, edit, and review trigger history and webhook configurations.
+- [x] **Unified Background Alert Engine**: Async market-hours scheduler evaluating active triggers every 60 seconds with anti-spam cooldowns.
+- [x] **Telegram Bot Notifications**: Automated Markdown trade alerts with current price, ADR % from LOD, RSI, and direct chart links.
+- [x] **Discord Webhook Alerts**: Formatted embed notifications with color-coded severity (Green = Breakout, Red = Breakdown, Orange = ADR Climax).
+- [x] **Custom Price Cross Alerts**: User-defined price triggers (`>`, `<`, `crosses_above`, `trailing_stop`).
+- [x] **Browser Push Notifications**: HTML5 Notifications API integration for native desktop popups.
+- [x] **Alerts Management UI**: Modal to create, pause, edit, and review trigger history and webhook configurations.
 
 ### Phase 8: Automation & Broker Integration
-- [ ] **Broker Abstraction Interface (`BaseBroker`)**: Pluggable interface for orders, positions, account balance, and square-off operations.
-- [ ] **Full-Featured Paper Trading Engine (`PaperBroker`)**: Virtual ₹1,000,000 portfolio with realistic slippage (0.05%), transaction fees, F&O lot sizes, and MTM P&L tracking.
-- [ ] **Dhan HQ API Adapter (`DhanBroker`)**: Live order placement (Regular, Intraday MIS, Delivery CNC, SL/SL-M) and margin inquiry.
-- [ ] **Zerodha Kite Connect Adapter (`KiteBroker`)**: Session token authentication and 1-click execution.
-- [ ] **Frontend Trading Desk**: Quick-order drawer from scanner table and chart, position book, and prominent Paper/Live toggle guardrail.
+- [x] **Broker Abstraction Interface (`BaseBroker`)**: Pluggable interface for orders, positions, account balance, and square-off operations.
+- [x] **Full-Featured Paper Trading Engine (`PaperBroker`)**: Virtual ₹1,000,000 portfolio with realistic slippage (0.05%), transaction fees, F&O lot sizes, and MTM P&L tracking.
+- [x] **Dhan HQ API Adapter (`DhanBroker`)**: Live order placement (Regular, Intraday MIS, Delivery CNC, SL/SL-M) and margin inquiry.
+- [x] **Zerodha Kite Connect Adapter (`KiteBroker`)**: Session token authentication and 1-click execution.
+- [x] **Frontend Trading Desk**: Quick-order drawer from scanner table and chart, position book, and prominent Paper/Live toggle guardrail.

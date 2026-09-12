@@ -12,6 +12,8 @@ All endpoints that return price/indicator data include a 'data_source' and
 import json
 import sys
 import time
+import matplotlib
+matplotlib.use('Agg')
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -34,6 +36,13 @@ from ohlcv_service import fetch_ohlcv, get_latest_fetch_time, TIMEFRAME_MAP
 from scanner_engine import run_scanner
 from indicators import INDICATOR_REGISTRY, _build_df, compute_indicator_series, _last_two
 from scanner_registry import get_scanner_categories, run_generic_scanner
+from options_service import fetch_option_chain
+from alert_service import (
+    list_user_alerts, create_user_alert, toggle_user_alert,
+    delete_user_alert, get_alert_logs, evaluate_all_alerts,
+    get_broker_setting, set_broker_setting
+)
+from broker_service import get_active_broker
 
 
 # ---------------------------------------------------------------------------
@@ -964,6 +973,127 @@ def get_backtest_tearsheet(filename: str):
     if not file_path.exists():
         raise HTTPException(404, detail="Tearsheet not found.")
     return FileResponse(str(file_path), media_type="text/html")
+
+
+# ---------------------------------------------------------------------------
+# Phase 6: Option Chain & Greeks Endpoints
+# ---------------------------------------------------------------------------
+
+@app.get("/api/options/{symbol}")
+def get_option_chain_endpoint(symbol: str, expiry: Optional[str] = None):
+    """Retrieve full options chain, Greeks, PCR, and Max Pain."""
+    try:
+        data = fetch_option_chain(symbol, expiry=expiry)
+        return data
+    except Exception as e:
+        print(f"[OPTIONS_API] Error: {e}")
+        raise HTTPException(500, detail=str(e))
+
+
+# ---------------------------------------------------------------------------
+# Phase 7: Real-Time Alerts Endpoints
+# ---------------------------------------------------------------------------
+
+class CreateAlertRequest(BaseModel):
+    name: str
+    alert_type: str
+    symbol: str
+    condition: dict
+    channels: list[str]
+
+class SettingsRequest(BaseModel):
+    settings: dict
+
+class ToggleAlertRequest(BaseModel):
+    is_active: bool
+
+@app.get("/api/alerts")
+def get_alerts():
+    return {"alerts": list_user_alerts()}
+
+@app.post("/api/alerts")
+def create_alert(req: CreateAlertRequest):
+    try:
+        alert_id = create_user_alert(req.name, req.alert_type, req.symbol, req.condition, req.channels)
+        return {"status": "success", "alert_id": alert_id}
+    except Exception as e:
+        raise HTTPException(500, detail=str(e))
+
+@app.put("/api/alerts/{alert_id}/toggle")
+def toggle_alert(alert_id: int, req: ToggleAlertRequest):
+    toggle_user_alert(alert_id, req.is_active)
+    return {"status": "success"}
+
+@app.delete("/api/alerts/{alert_id}")
+def delete_alert(alert_id: int):
+    delete_user_alert(alert_id)
+    return {"status": "success"}
+
+@app.get("/api/alerts/logs")
+def get_logs(limit: int = 50):
+    return {"logs": get_alert_logs(limit)}
+
+@app.post("/api/alerts/evaluate")
+def evaluate_alerts():
+    triggered = evaluate_all_alerts()
+    return {"status": "success", "triggered": triggered}
+
+@app.get("/api/settings/broker")
+def get_settings():
+    return {
+        "telegram_bot_token": get_broker_setting("telegram_bot_token"),
+        "telegram_chat_id": get_broker_setting("telegram_chat_id"),
+        "discord_webhook_url": get_broker_setting("discord_webhook_url"),
+        "execution_mode": get_broker_setting("execution_mode", "PAPER"),
+        "dhan_client_id": get_broker_setting("dhan_client_id"),
+        "dhan_access_token": get_broker_setting("dhan_access_token"),
+    }
+
+@app.post("/api/settings/broker")
+def update_settings(req: SettingsRequest):
+    for k, v in req.settings.items():
+        set_broker_setting(k, str(v))
+    return {"status": "success"}
+
+
+# ---------------------------------------------------------------------------
+# Phase 8: Automation & Broker Execution Endpoints
+# ---------------------------------------------------------------------------
+
+class OrderPlacementRequest(BaseModel):
+    symbol: str
+    side: str
+    order_type: str = "MARKET"
+    quantity: int
+    price: float = 0.0
+
+@app.get("/api/broker/balance")
+def get_balance():
+    b = get_active_broker()
+    return b.get_account_balance()
+
+@app.get("/api/broker/positions")
+def get_positions():
+    b = get_active_broker()
+    return {"positions": b.get_positions()}
+
+@app.get("/api/broker/orders")
+def get_orders():
+    b = get_active_broker()
+    return {"orders": b.get_orders()}
+
+@app.post("/api/broker/order")
+def place_order(req: OrderPlacementRequest):
+    b = get_active_broker()
+    res = b.place_order(req.symbol, req.side, req.order_type, req.quantity, req.price)
+    return res
+
+@app.post("/api/broker/square-off")
+def square_off():
+    b = get_active_broker()
+    res = b.square_off_all()
+    return {"status": "success", "closed": res}
+
 
 
 # ---------------------------------------------------------------------------

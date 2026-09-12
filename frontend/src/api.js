@@ -95,5 +95,29 @@ export const api = {
   runBacktest:             (body) => request('/backtest/run', { method: 'POST', body: JSON.stringify(body) }),
   getBacktestLeaderboard:  () => request('/backtest/leaderboard'),
   getTearsheetUrl:         (filename) => `/api/backtest/tearsheet/${encodeURIComponent(filename)}`,
+
+  // Phase 6: Option Chain & Greeks
+  getOptionChain:          (symbol, expiry = null) => {
+    let url = `/options/${encodeURIComponent(symbol)}`;
+    if (expiry) url += `?expiry=${encodeURIComponent(expiry)}`;
+    return request(url);
+  },
+
+  // Phase 7: Real-Time Alerts & Webhooks
+  getAlerts:               () => request('/alerts'),
+  createAlert:             (body) => request('/alerts', { method: 'POST', body: JSON.stringify(body) }),
+  toggleAlert:             (id, isActive) => request(`/alerts/${id}/toggle`, { method: 'PUT', body: JSON.stringify({ is_active: isActive }) }),
+  deleteAlert:             (id) => request(`/alerts/${id}`, { method: 'DELETE' }),
+  getAlertLogs:            (limit = 50) => request(`/alerts/logs?limit=${limit}`),
+  evaluateAlerts:          () => request('/alerts/evaluate', { method: 'POST' }),
+  getBrokerSettings:       () => request('/settings/broker'),
+  updateBrokerSettings:    (settings) => request('/settings/broker', { method: 'POST', body: JSON.stringify({ settings }) }),
+
+  // Phase 8: Automation & Broker Execution
+  getBrokerBalance:        () => request('/broker/balance'),
+  getBrokerPositions:      () => request('/broker/positions'),
+  getBrokerOrders:         () => request('/broker/orders'),
+  placeBrokerOrder:        (order) => request('/broker/order', { method: 'POST', body: JSON.stringify(order) }),
+  squareOffAll:            () => request('/broker/square-off', { method: 'POST' }),
 };
 
