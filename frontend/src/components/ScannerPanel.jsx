@@ -36,6 +36,32 @@ function formatVolume(vol) {
   return vol.toString()
 }
 
+const KNOWN_INDICES = [
+  { symbol: 'NIFTY 50', name: 'NIFTY 50 (NSE Benchmark)', sector: 'Index', ltp: 24333.30, change_pct: -0.26, signal: 'Benchmark Index' },
+  { symbol: 'BANKNIFTY', name: 'NIFTY Bank Index', sector: 'Banking', ltp: 51505.35, change_pct: -0.23, signal: 'Sectoral Index' },
+  { symbol: 'FINNIFTY', name: 'NIFTY Financial Services', sector: 'Financial Services', ltp: 23650.00, change_pct: -0.15, signal: 'Sectoral Index' },
+  { symbol: 'MIDCPNIFTY', name: 'NIFTY Midcap Select', sector: 'Midcap', ltp: 12850.40, change_pct: 0.35, signal: 'Benchmark Index' },
+  { symbol: 'SENSEX', name: 'BSE SENSEX 30 Benchmark', sector: 'Index', ltp: 79648.90, change_pct: -0.26, signal: 'Benchmark Index' },
+  { symbol: 'BANKEX', name: 'BSE BANKEX Index', sector: 'Banking', ltp: 58200.00, change_pct: -0.20, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY NEXT 50', name: 'NIFTY Next 50', sector: 'Index', ltp: 68400.00, change_pct: 0.12, signal: 'Benchmark Index' },
+  { symbol: 'NIFTY IT', name: 'NIFTY Information Technology', sector: 'Technology', ltp: 42150.20, change_pct: 0.44, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY AUTO', name: 'NIFTY Automobiles Index', sector: 'Automobile', ltp: 25400.80, change_pct: 0.28, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY PHARMA', name: 'NIFTY Pharmaceuticals Index', sector: 'Pharmaceuticals', ltp: 21800.00, change_pct: 0.52, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY FMCG', name: 'NIFTY Fast Moving Consumer Goods', sector: 'FMCG', ltp: 59300.00, change_pct: -0.10, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY METAL', name: 'NIFTY Metals & Mining Index', sector: 'Metals & Mining', ltp: 9150.00, change_pct: 0.85, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY REALTY', name: 'NIFTY Real Estate Index', sector: 'Real Estate', ltp: 1020.00, change_pct: 1.15, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY ENERGY', name: 'NIFTY Energy Index', sector: 'Power & Energy', ltp: 38700.00, change_pct: 0.32, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY PSU BANK', name: 'NIFTY Public Sector Banks', sector: 'Banking', ltp: 6750.00, change_pct: -0.45, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY PVT BANK', name: 'NIFTY Private Sector Banks', sector: 'Banking', ltp: 26100.00, change_pct: -0.18, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY MEDIA', name: 'NIFTY Media & Entertainment', sector: 'Media', ltp: 2050.00, change_pct: -0.30, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY HEALTHCARE', name: 'NIFTY Healthcare & Hospitals', sector: 'Healthcare', ltp: 13400.00, change_pct: 0.40, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY OIL & GAS', name: 'NIFTY Oil, Gas & Petrochemicals', sector: 'Oil & Gas', ltp: 11600.00, change_pct: 0.15, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY INFRA', name: 'NIFTY Infrastructure Index', sector: 'Infrastructure', ltp: 8400.00, change_pct: 0.22, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY COMMODITIES', name: 'NIFTY Commodities Index', sector: 'Commodities', ltp: 8900.00, change_pct: 0.38, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY CONSUMPTION', name: 'NIFTY India Consumption', sector: 'Consumer Goods', ltp: 10450.00, change_pct: 0.05, signal: 'Sectoral Index' },
+  { symbol: 'NIFTY CPSE', name: 'NIFTY Central Public Sector', sector: 'Public Sector', ltp: 6300.00, change_pct: 0.18, signal: 'Sectoral Index' },
+]
+
 export function ScannerPanel({
   categories,
   activeCategory,
@@ -127,6 +153,16 @@ export function ScannerPanel({
     setScannerDropdownOpen(false)
   }
 
+  const matchingIndices = useMemo(() => {
+    if (!searchQuery || searchQuery.trim().length < 2) return []
+    const q = searchQuery.toLowerCase()
+    return KNOWN_INDICES.filter(idx =>
+      idx.symbol.toLowerCase().includes(q) ||
+      idx.name.toLowerCase().includes(q) ||
+      idx.sector.toLowerCase().includes(q)
+    )
+  }, [searchQuery])
+
   const filteredStocks = useMemo(() => {
     let rows = stocks.filter(s => {
       if (!searchQuery) return true
@@ -134,7 +170,8 @@ export function ScannerPanel({
       return (
         (s.symbol && s.symbol.toLowerCase().includes(q)) ||
         (s.name   && s.name.toLowerCase().includes(q))   ||
-        (s.signal && s.signal.toLowerCase().includes(q))
+        (s.signal && s.signal.toLowerCase().includes(q)) ||
+        (s.sector && s.sector.toLowerCase().includes(q))
       )
     })
     if (sortKey) {
@@ -397,7 +434,72 @@ export function ScannerPanel({
               })
 
               let counter = 0
-              return GROUP_ORDER.filter(g => groups[g]?.length > 0).flatMap(g => {
+              const renderedGroups = []
+
+              // ── 0. Matched Sectoral & Benchmark Indices Section (If searching) ──
+              if (matchingIndices.length > 0) {
+                renderedGroups.push(
+                  <tr key="grp-indices" className="signal-group-row">
+                    <td colSpan={9} style={{ background: 'rgba(56, 189, 248, 0.08)', borderLeft: '3px solid #38bdf8', padding: '6px 12px', borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span style={{ color: '#38bdf8', fontWeight: 700, fontSize: 11, letterSpacing: '0.4px' }}>🏛️ Benchmark & Sectoral Indices</span>
+                        <span style={{ color: '#38bdf8', fontSize: 10, fontFamily: 'var(--font-mono)', fontWeight: 600, background: 'rgba(56,189,248,0.15)', padding: '1px 6px', borderRadius: 4 }}>
+                          {matchingIndices.length} Index Match{matchingIndices.length !== 1 ? 'es' : ''}
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                )
+                matchingIndices.forEach(idxStock => {
+                  counter++
+                  const isSelected = activeSymbol === idxStock.symbol
+                  const isPos = idxStock.change_pct >= 0
+                  renderedGroups.push(
+                    <tr
+                      key={`idx-${idxStock.symbol}`}
+                      className={`dext-row ${isSelected ? 'selected' : ''}`}
+                      onClick={() => onSelectSymbol(idxStock.symbol)}
+                      style={{ background: 'rgba(56, 189, 248, 0.03)' }}
+                    >
+                      <td className="row-num">{counter}</td>
+                      <td className="symbol-cell">
+                        <div className="sym-wrapper">
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <span className="sym-name" style={{ color: '#38bdf8', fontWeight: 700 }}>{idxStock.symbol}</span>
+                            <span style={{ fontSize: 9, fontWeight: 700, padding: '1px 4px', borderRadius: 3, background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8' }}>
+                              INDEX
+                            </span>
+                          </div>
+                          <span className="sym-desc">{idxStock.name}</span>
+                        </div>
+                      </td>
+                      <td className="text-right font-mono ltp-cell">
+                        {idxStock.ltp > 0 ? idxStock.ltp.toLocaleString('en-IN', { minimumFractionDigits: 2 }) : '-'}
+                      </td>
+                      <td className="text-right font-mono">
+                        <span className={`chg-badge ${isPos ? 'bullish' : 'bearish'}`}>
+                          {isPos ? '+' : ''}{(idxStock.change_pct || 0).toFixed(2)}%
+                        </span>
+                      </td>
+                      <td className="text-right font-mono" style={{ fontSize: 11, color: '#64748b' }}>-</td>
+                      <td className="text-right font-mono" style={{ fontSize: 11, color: '#64748b' }}>-</td>
+                      <td className="text-right font-mono vol-cell" style={{ color: '#64748b' }}>-</td>
+                      <td>
+                        <span className="signal-pill" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', borderColor: 'rgba(56, 189, 248, 0.3)' }}>
+                          {idxStock.signal}
+                        </span>
+                      </td>
+                      <td className="text-right font-mono rsi-cell">
+                        <span className="rsi-badge">-</span>
+                      </td>
+                    </tr>
+                  )
+                })
+              }
+
+              return [
+                ...renderedGroups,
+                ...GROUP_ORDER.filter(g => groups[g]?.length > 0).flatMap(g => {
                 const meta = GROUP_META[g]
                 const rows = groups[g]
                 return [
@@ -476,6 +578,7 @@ export function ScannerPanel({
                   })
                 ]
               })
+              ]
             })()
 }
           </tbody>

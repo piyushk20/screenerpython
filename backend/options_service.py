@@ -29,10 +29,59 @@ RISK_FREE_RATE = 0.068  # 6.8% RBI 91-day T-Bill rate
 
 # Standard NSE F&O Lot Sizes
 NSE_LOT_SIZES: Dict[str, int] = {
+    # Major Benchmark Indices
     "NIFTY": 25,
+    "NIFTY 50": 25,
+    "^NSEI": 25,
     "BANKNIFTY": 15,
+    "BANK NIFTY": 15,
+    "^NSEBANK": 15,
     "FINNIFTY": 25,
+    "FIN NIFTY": 25,
+    "NIFTY_FIN_SERVICE": 25,
     "MIDCPNIFTY": 50,
+    "NIFTY MIDCAP": 50,
+    "^NSEMDCP50": 50,
+    "SENSEX": 10,
+    "^BSESN": 10,
+    "BANKEX": 15,
+    "^BSEBANK": 15,
+    "NIFTY NEXT 50": 10,
+    "NIFTYNXT50": 10,
+    # Sectoral Indices
+    "NIFTY IT": 25,
+    "CNXIT": 25,
+    "^CNXIT": 25,
+    "NIFTY AUTO": 25,
+    "CNXAUTO": 25,
+    "^CNXAUTO": 25,
+    "NIFTY PHARMA": 25,
+    "CNXPHARMA": 25,
+    "^CNXPHARMA": 25,
+    "NIFTY FMCG": 25,
+    "CNXFMCG": 25,
+    "^CNXFMCG": 25,
+    "NIFTY METAL": 25,
+    "CNXMETAL": 25,
+    "^CNXMETAL": 25,
+    "NIFTY REALTY": 25,
+    "CNXREALTY": 25,
+    "^CNXREALTY": 25,
+    "NIFTY ENERGY": 25,
+    "CNXENERGY": 25,
+    "^CNXENERGY": 25,
+    "NIFTY PSU BANK": 25,
+    "CNXPSUBANK": 25,
+    "NIFTY PVT BANK": 25,
+    "CNXPVTBANK": 25,
+    "NIFTY MEDIA": 25,
+    "NIFTY HEALTHCARE": 25,
+    "NIFTY OIL & GAS": 25,
+    "NIFTY INFRA": 25,
+    "NIFTY COMMODITIES": 25,
+    "NIFTY CONSUMPTION": 25,
+    "NIFTY CPSE": 25,
+    # Heavyweight Equities
     "RELIANCE": 250,
     "HDFCBANK": 550,
     "ICICIBANK": 700,
@@ -45,6 +94,10 @@ NSE_LOT_SIZES: Dict[str, int] = {
     "AXISBANK": 625,
     "KOTAKBANK": 400,
     "TATAMOTORS": 1425,
+    "TATASTEEL": 5500,
+    "BAJFINANCE": 125,
+    "MARUTI": 50,
+    "SUNPHARMA": 350,
 }
 
 
@@ -98,7 +151,7 @@ def calculate_greeks(
     Calculate Black-Scholes Greeks:
     - Delta: Price sensitivity per rupee underlying move
     - Gamma: Rate of Delta change per rupee move
-    - Theta: Daily time decay (₹ / day)
+    - Theta: Daily time decay (Rs / day)
     - Vega: Sensitivity per 1% change in IV
     """
     if tte_years <= 0 or volatility <= 0 or spot <= 0 or strike <= 0:
@@ -195,6 +248,206 @@ def solve_implied_volatility(
 
 
 # ---------------------------------------------------------------------------
+# Technical Indicators Engine on OHLCV Candles
+# ---------------------------------------------------------------------------
+
+def calculate_technical_analysis(candles: List[Dict[str, Any]], spot_price: float, pcr: float, max_pain: float) -> Dict[str, Any]:
+    """
+    Compute full technical analysis (RSI 14, EMA 20/50/200, MACD, Trend Bias)
+    and produce a unified Technical + Derivatives Confluence Analysis.
+    """
+    if not candles or len(candles) < 5:
+        return {
+            "rsi": 50.0,
+            "rsi_status": "Neutral (50.0)",
+            "ema_20": round(spot_price, 2),
+            "ema_50": round(spot_price, 2),
+            "ema_200": round(spot_price, 2),
+            "macd_line": 0.0,
+            "macd_signal": 0.0,
+            "macd_hist": 0.0,
+            "macd_status": "Neutral",
+            "trend_bias": "Neutral",
+            "confluence_badge": "NEUTRAL / BALANCED",
+            "confluence_score": 0,
+            "confluence_summary": "Neutral consolidation. Spot is balanced around key technical averages and derivatives levels.",
+            "tech_bias": "Neutral",
+            "derivatives_bias": "Balanced",
+        }
+
+    try:
+        closes = [float(c["close"]) for c in candles if c.get("close") is not None]
+        df = pd.DataFrame({"close": closes})
+
+        # 1. EMAs
+        ema_20_series = df["close"].ewm(span=20, adjust=False).mean()
+        ema_50_series = df["close"].ewm(span=min(50, len(df)), adjust=False).mean()
+        ema_200_series = df["close"].ewm(span=min(200, len(df)), adjust=False).mean()
+
+        ema_20 = float(ema_20_series.iloc[-1])
+        ema_50 = float(ema_50_series.iloc[-1])
+        ema_200 = float(ema_200_series.iloc[-1])
+
+        # 2. RSI (14)
+        delta = df["close"].diff()
+        gain = (delta.where(delta > 0, 0)).rolling(window=14, min_periods=1).mean()
+        loss = (-delta.where(delta < 0, 0)).rolling(window=14, min_periods=1).mean()
+        rs = gain / (loss.replace(0, 1e-9))
+        rsi_series = 100 - (100 / (1 + rs))
+        rsi = float(rsi_series.iloc[-1])
+        rsi = round(max(1.0, min(99.0, rsi)), 1)
+
+        # 3. MACD (12, 26, 9)
+        ema_12 = df["close"].ewm(span=12, adjust=False).mean()
+        ema_26 = df["close"].ewm(span=min(26, len(df)), adjust=False).mean()
+        macd_line_series = ema_12 - ema_26
+        macd_signal_series = macd_line_series.ewm(span=9, adjust=False).mean()
+        macd_hist_series = macd_line_series - macd_signal_series
+
+        macd_line = round(float(macd_line_series.iloc[-1]), 2)
+        macd_signal = round(float(macd_signal_series.iloc[-1]), 2)
+        macd_hist = round(float(macd_hist_series.iloc[-1]), 2)
+
+        prev_hist = float(macd_hist_series.iloc[-2]) if len(macd_hist_series) > 1 else macd_hist
+
+        # RSI Status
+        if rsi >= 70:
+            rsi_status = f"Overbought ({rsi}) - Potential Cooling"
+            rsi_pts = -1
+        elif rsi <= 30:
+            rsi_status = f"Oversold ({rsi}) - Rebound Setup"
+            rsi_pts = +1
+        elif rsi >= 55:
+            rsi_status = f"Bullish Expansion ({rsi})"
+            rsi_pts = +1
+        elif rsi <= 45:
+            rsi_status = f"Bearish Zone ({rsi})"
+            rsi_pts = -1
+        else:
+            rsi_status = f"Neutral Range ({rsi})"
+            rsi_pts = 0
+
+        # MACD Status
+        if macd_hist >= 0 and prev_hist < 0:
+            macd_status = "Fresh Bullish Crossover"
+            macd_pts = +2
+        elif macd_hist >= 0:
+            macd_status = "Bullish Momentum"
+            macd_pts = +1
+        elif macd_hist < 0 and prev_hist >= 0:
+            macd_status = "Fresh Bearish Crossover"
+            macd_pts = -2
+        else:
+            macd_status = "Bearish Momentum"
+            macd_pts = -1
+
+        # Trend Bias based on EMAs & Spot
+        if spot_price > ema_20 and ema_20 > ema_50 and ema_50 > ema_200:
+            trend_bias = "Strong Bullish (Price > EMA20 > EMA50 > EMA200)"
+            trend_pts = +2
+            tech_bias = "Bullish"
+        elif spot_price > ema_20 and spot_price > ema_50:
+            trend_bias = "Bullish (Above EMA 20 & 50)"
+            trend_pts = +1
+            tech_bias = "Bullish"
+        elif spot_price < ema_20 and ema_20 < ema_50 and ema_50 < ema_200:
+            trend_bias = "Strong Bearish (Price < EMA20 < EMA50 < EMA200)"
+            trend_pts = -2
+            tech_bias = "Bearish"
+        elif spot_price < ema_20 and spot_price < ema_50:
+            trend_bias = "Bearish (Below EMA 20 & 50)"
+            trend_pts = -1
+            tech_bias = "Bearish"
+        else:
+            trend_bias = "Consolidating / Mixed"
+            trend_pts = 0
+            tech_bias = "Neutral"
+
+        # Derivatives Points (PCR & Max Pain vs Spot)
+        deriv_pts = 0
+        if pcr >= 1.3:
+            deriv_pts += 2
+            derivatives_bias = "Strong Put Writing Support (PCR > 1.3)"
+        elif pcr >= 1.0:
+            deriv_pts += 1
+            derivatives_bias = "Mild Put Support (PCR 1.0 - 1.3)"
+        elif pcr <= 0.7:
+            deriv_pts -= 2
+            derivatives_bias = "Heavy Call Resistance Overhead (PCR < 0.7)"
+        elif pcr <= 0.9:
+            deriv_pts -= 1
+            derivatives_bias = "Mild Call Writing Dominance (PCR 0.7 - 0.9)"
+        else:
+            derivatives_bias = "Balanced OI Distribution"
+
+        if spot_price > max_pain:
+            deriv_pts += 1
+        elif spot_price < max_pain:
+            deriv_pts -= 1
+
+        total_score = trend_pts + rsi_pts + macd_pts + deriv_pts
+
+        if total_score >= 4:
+            confluence_badge = "STRONG BULLISH CONFLUENCE"
+            badge_color = "#22c55e"
+            summary_msg = f"Underlying is in strong upward alignment ({trend_bias}) with RSI {rsi} and {macd_status}. Options OI shows {derivatives_bias} with Spot above Max Pain Rs {max_pain}."
+        elif total_score >= 1:
+            confluence_badge = "MODERATE BULLISH BIAS"
+            badge_color = "#4ade80"
+            summary_msg = f"Underlying demonstrates bullish technical tendency ({trend_bias}, RSI {rsi}) supported by {derivatives_bias}."
+        elif total_score <= -4:
+            confluence_badge = "STRONG BEARISH CONFLUENCE"
+            badge_color = "#ef4444"
+            summary_msg = f"Underlying exhibits downward technical breakdown ({trend_bias}) with {macd_status}. Options OI shows {derivatives_bias} with Spot below Max Pain Rs {max_pain}."
+        elif total_score <= -1:
+            confluence_badge = "MODERATE BEARISH BIAS"
+            badge_color = "#f87171"
+            summary_msg = f"Bearish technical bias ({trend_bias}, RSI {rsi}) aligned with {derivatives_bias}."
+        else:
+            confluence_badge = "NEUTRAL CONSOLIDATION"
+            badge_color = "#94a3b8"
+            summary_msg = f"Underlying is range-bound between key EMA averages with balanced options open interest distribution."
+
+        return {
+            "rsi": rsi,
+            "rsi_status": rsi_status,
+            "ema_20": round(ema_20, 2),
+            "ema_50": round(ema_50, 2),
+            "ema_200": round(ema_200, 2),
+            "macd_line": macd_line,
+            "macd_signal": macd_signal,
+            "macd_hist": macd_hist,
+            "macd_status": macd_status,
+            "trend_bias": trend_bias,
+            "confluence_badge": confluence_badge,
+            "badge_color": badge_color,
+            "confluence_score": total_score,
+            "confluence_summary": summary_msg,
+            "tech_bias": tech_bias,
+            "derivatives_bias": derivatives_bias,
+        }
+    except Exception as e:
+        print(f"[OPTIONS_TECH_INDICATORS] Error: {e}")
+        return {
+            "rsi": 50.0,
+            "rsi_status": "Neutral (50.0)",
+            "ema_20": round(spot_price, 2),
+            "ema_50": round(spot_price, 2),
+            "ema_200": round(spot_price, 2),
+            "macd_line": 0.0,
+            "macd_signal": 0.0,
+            "macd_hist": 0.0,
+            "macd_status": "Neutral",
+            "trend_bias": "Neutral",
+            "confluence_badge": "NEUTRAL / BALANCED",
+            "confluence_score": 0,
+            "confluence_summary": "Spot is balanced around key technical averages and derivatives levels.",
+            "tech_bias": "Neutral",
+            "derivatives_bias": "Balanced",
+        }
+
+
+# ---------------------------------------------------------------------------
 # Max Pain & PCR Solvers
 # ---------------------------------------------------------------------------
 
@@ -248,9 +501,9 @@ def calculate_historical_volatility(symbol: str, days: int = 30) -> float:
 def _derive_strike_step(spot: float) -> float:
     """Determine standard NSE strike spacing based on underlying spot price."""
     if spot > 35000:
-        return 100.0  # BANKNIFTY
+        return 100.0  # BANKNIFTY / SENSEX
     elif spot > 15000:
-        return 50.0   # NIFTY 50
+        return 50.0   # NIFTY 50 / FINNIFTY
     elif spot > 5000:
         return 50.0
     elif spot > 2000:
@@ -281,16 +534,28 @@ def _get_next_thursdays(count: int = 4) -> List[str]:
 def fetch_option_chain(symbol: str, expiry: Optional[str] = None) -> Dict[str, Any]:
     """
     Fetch or derive the full real-time option chain for an NSE stock or index,
-    complete with Greeks, IV, Open Interest, Volume, PCR, and Max Pain.
+    complete with Greeks, IV, Open Interest, Volume, PCR, Max Pain, and Technical Indicators Confluence.
     """
     clean_sym = symbol.strip().upper().replace(".NS", "").replace("^", "")
 
-    # 1. Fetch current underlying spot price
+    # 1. Fetch current underlying spot price & OHLCV candles
     candles = fetch_ohlcv(clean_sym, timeframe="1D", force_refresh=False)
     if candles:
         spot_price = float(candles[-1]["close"])
     else:
-        spot_price = 24000.0 if "NIFTY" in clean_sym else 1000.0
+        # Sensible defaults for indices if candles are delayed
+        if "BANK" in clean_sym or "BANKNIFTY" in clean_sym:
+            spot_price = 52000.0
+        elif "SENSEX" in clean_sym:
+            spot_price = 80000.0
+        elif "FIN" in clean_sym or "FINNIFTY" in clean_sym:
+            spot_price = 23500.0
+        elif "IT" in clean_sym:
+            spot_price = 42000.0
+        elif "NIFTY" in clean_sym:
+            spot_price = 24500.0
+        else:
+            spot_price = 1000.0
 
     # 2. Expiry dates
     expiries = _get_next_thursdays(4)
@@ -342,7 +607,7 @@ def fetch_option_chain(symbol: str, expiry: Optional[str] = None) -> Dict[str, A
 
         # Realistic Open Interest bell curve centered on OTM/ATM clusters
         dist_factor = math.exp(-0.5 * ((k - spot_price) / (3.5 * step)) ** 2)
-        base_lots = 4500 if "NIFTY" in clean_sym else 350
+        base_lots = 4500 if ("NIFTY" in clean_sym or "SENSEX" in clean_sym or "BANK" in clean_sym) else 350
         
         c_oi = int(base_lots * (1.2 + 1.8 * dist_factor * (1.1 if k >= spot_price else 0.6)))
         p_oi = int(base_lots * (1.2 + 1.8 * dist_factor * (1.1 if k <= spot_price else 0.6)))
@@ -407,13 +672,18 @@ def fetch_option_chain(symbol: str, expiry: Optional[str] = None) -> Dict[str, A
     iv_rank = round(max(0.0, min(100.0, ((atm_iv - iv_min) / (iv_max - iv_min)) * 100.0)), 1)
     iv_percentile = round(max(10.0, min(95.0, iv_rank * 0.92 + 5.0)), 1)
 
+    # 10. Technical Indicators Confluence Analysis
+    tech_analysis = calculate_technical_analysis(candles, spot_price, pcr, max_pain)
+
+    lot_sz = NSE_LOT_SIZES.get(clean_sym) or NSE_LOT_SIZES.get(symbol.strip().upper(), 100)
+
     return {
         "symbol": clean_sym,
         "spot_price": round(spot_price, 2),
         "target_expiry": target_expiry,
         "days_to_expiry": days_to_exp,
         "available_expiries": expiries,
-        "lot_size": NSE_LOT_SIZES.get(clean_sym, 100),
+        "lot_size": lot_sz,
         "summary": {
             "pcr": pcr,
             "max_pain": max_pain,
@@ -426,6 +696,7 @@ def fetch_option_chain(symbol: str, expiry: Optional[str] = None) -> Dict[str, A
             "total_put_oi": total_put_oi,
             "major_support": major_support,
             "major_resistance": major_resistance,
+            "technical_analysis": tech_analysis,
         },
         "chain": rows
     }

@@ -200,6 +200,46 @@ def init_db():
             now = datetime.now(timezone.utc).isoformat()
             conn.execute("INSERT INTO watchlists (name, created_at) VALUES (?, ?)", ("My Watchlist", now))
 
+        # Seed Benchmark & Sectoral Indices into symbols table
+        from datetime import datetime, timezone
+        now = datetime.now(timezone.utc).isoformat()
+        indices_to_seed = [
+            ("NIFTY 50", "NIFTY 50 (NSE Benchmark)", "NSE", "Index", 20000000.0),
+            ("BANKNIFTY", "NIFTY Bank Index", "NSE", "Banking", 10000000.0),
+            ("FINNIFTY", "NIFTY Financial Services Index", "NSE", "Financial Services", 8000000.0),
+            ("MIDCPNIFTY", "NIFTY Midcap Select Index", "NSE", "Midcap", 5000000.0),
+            ("NIFTY NEXT 50", "NIFTY Next 50 Index", "NSE", "Index", 4000000.0),
+            ("SENSEX", "BSE SENSEX 30 Benchmark", "BSE", "Index", 18000000.0),
+            ("BANKEX", "BSE BANKEX Index", "BSE", "Banking", 7000000.0),
+            ("NIFTY IT", "NIFTY Information Technology Index", "NSE", "Technology", 6000000.0),
+            ("NIFTY AUTO", "NIFTY Automobiles Index", "NSE", "Automobile", 5000000.0),
+            ("NIFTY PHARMA", "NIFTY Pharmaceuticals Index", "NSE", "Pharmaceuticals", 4500000.0),
+            ("NIFTY FMCG", "NIFTY Fast Moving Consumer Goods Index", "NSE", "FMCG", 5500000.0),
+            ("NIFTY METAL", "NIFTY Metals & Mining Index", "NSE", "Metals & Mining", 4000000.0),
+            ("NIFTY REALTY", "NIFTY Real Estate Index", "NSE", "Real Estate", 2000000.0),
+            ("NIFTY ENERGY", "NIFTY Energy Index", "NSE", "Power & Energy", 6500000.0),
+            ("NIFTY PSU BANK", "NIFTY Public Sector Banks Index", "NSE", "Banking", 3500000.0),
+            ("NIFTY PVT BANK", "NIFTY Private Sector Banks Index", "NSE", "Banking", 7500000.0),
+            ("NIFTY MEDIA", "NIFTY Media & Entertainment Index", "NSE", "Media", 800000.0),
+            ("NIFTY HEALTHCARE", "NIFTY Healthcare & Hospitals Index", "NSE", "Healthcare", 3800000.0),
+            ("NIFTY OIL & GAS", "NIFTY Oil, Gas & Petrochemicals Index", "NSE", "Oil & Gas", 5200000.0),
+            ("NIFTY INFRA", "NIFTY Infrastructure Index", "NSE", "Infrastructure", 4200000.0),
+            ("NIFTY COMMODITIES", "NIFTY Commodities Index", "NSE", "Commodities", 3900000.0),
+            ("NIFTY CONSUMPTION", "NIFTY India Consumption Index", "NSE", "Consumer Goods", 4800000.0),
+            ("NIFTY CPSE", "NIFTY Central Public Sector Enterprises Index", "NSE", "Public Sector", 3200000.0),
+            ("NIFTY MIDCAP", "NIFTY Midcap 50 Index", "NSE", "Midcap", 4500000.0),
+            ("NIFTY SMALLCAP", "NIFTY Smallcap 100 Index", "NSE", "Smallcap", 3000000.0),
+        ]
+        for sym, name, exch, sec, mcap in indices_to_seed:
+            conn.execute(
+                """
+                INSERT INTO symbols (symbol, name, exchange, sector, market_cap, is_active, synced_at)
+                VALUES (?, ?, ?, ?, ?, 1, ?)
+                ON CONFLICT(symbol) DO UPDATE SET name=excluded.name, exchange=excluded.exchange, sector=excluded.sector
+                """,
+                (sym, name, exch, sec, mcap, now)
+            )
+
         from datetime import datetime, timezone
         import json
         count = conn.execute("SELECT COUNT(*) FROM scanners").fetchone()[0]
