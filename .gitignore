@@ -39,3 +39,31 @@ PKScreener/
 .DS_Store
 Thumbs.db
 .kilo/
+
+# Environment Variables, Secrets & API Keys
+.env
+.env.*
+*.env
+*.env.*
+*.secret
+*.secrets
+secrets/
+*.pem
+*.key
+*.cert
+*.crt
+credentials.json
+client_secret*.json
+token*.json
+auth*.json
+
+# Logs & Debug Dumps
+*.log
+logs/
+*.bak
+*.swp
+*.swo
+dump/
+tmp/
+temp/
+

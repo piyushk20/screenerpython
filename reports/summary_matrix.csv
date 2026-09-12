@@ -1,41 +1,41 @@
 Ticker,Strategy,Total Return (%),CAGR (%),Sharpe,Sortino,Max DD (%),Win Rate (%),Trades,Profit Factor,Tearsheet
-NIFTY50,Minervini VCP Trend Filter,20.5,5.66,1.02,1.51,-5.91,50.0,6,11.93,C:\Users\HP\screenerpython\reports\tearsheets\NIFTY50_Minervini_VCP_Trend_Filter_tearsheet.html
-NIFTY50,High Relative Volume Breakout,6.08,1.76,0.63,0.93,-4.55,50.0,2,113.36,C:\Users\HP\screenerpython\reports\tearsheets\NIFTY50_High_Relative_Volume_Breakout_tearsheet.html
-NIFTY50,EMA 20/50 Golden Cross,19.36,5.36,0.51,0.71,-18.39,54.55,11,2.31,C:\Users\HP\screenerpython\reports\tearsheets\NIFTY50_EMA_20_50_Golden_Cross_tearsheet.html
-HDFCBANK,High Relative Volume Breakout,12.28,3.47,0.48,0.65,-9.34,55.56,9,3.02,C:\Users\HP\screenerpython\reports\tearsheets\HDFCBANK_High_Relative_Volume_Breakout_tearsheet.html
-HDFCBANK,Daily Momentum Breakout,11.69,3.31,0.42,0.63,-8.03,31.58,19,1.66,C:\Users\HP\screenerpython\reports\tearsheets\HDFCBANK_Daily_Momentum_Breakout_tearsheet.html
-BANKNIFTY,RSI Bullish Breakout (>55),15.33,4.3,0.37,0.52,-14.58,33.33,30,1.37,C:\Users\HP\screenerpython\reports\tearsheets\BANKNIFTY_RSI_Bullish_Breakout_(GT55)_tearsheet.html
-BANKNIFTY,Minervini VCP Trend Filter,4.94,1.44,0.31,0.42,-6.64,40.0,5,2.1,C:\Users\HP\screenerpython\reports\tearsheets\BANKNIFTY_Minervini_VCP_Trend_Filter_tearsheet.html
-BANKNIFTY,Daily Momentum Breakout,4.58,1.33,0.3,0.44,-7.97,25.0,12,1.49,C:\Users\HP\screenerpython\reports\tearsheets\BANKNIFTY_Daily_Momentum_Breakout_tearsheet.html
-TCS,Minervini VCP Trend Filter,6.35,1.83,0.27,0.42,-9.85,33.33,6,1.79,C:\Users\HP\screenerpython\reports\tearsheets\TCS_Minervini_VCP_Trend_Filter_tearsheet.html
-NIFTY50,RSI Bullish Breakout (>55),5.6,1.62,0.2,0.27,-15.99,29.63,27,1.13,C:\Users\HP\screenerpython\reports\tearsheets\NIFTY50_RSI_Bullish_Breakout_(GT55)_tearsheet.html
-BANKNIFTY,EMA 20/50 Golden Cross,4.19,1.22,0.16,0.21,-21.11,26.67,15,1.17,C:\Users\HP\screenerpython\reports\tearsheets\BANKNIFTY_EMA_20_50_Golden_Cross_tearsheet.html
-HDFCBANK,RSI Bullish Breakout (>55),2.03,0.59,0.12,0.17,-22.62,52.17,23,1.06,C:\Users\HP\screenerpython\reports\tearsheets\HDFCBANK_RSI_Bullish_Breakout_(GT55)_tearsheet.html
-TCS,Multi-Timeframe RSI Momentum,1.76,0.51,0.11,0.15,-10.18,50.0,4,1.36,C:\Users\HP\screenerpython\reports\tearsheets\TCS_Multi-Timeframe_RSI_Momentum_tearsheet.html
-NIFTY50,Daily Momentum Breakout,0.9,0.26,0.08,0.11,-8.18,20.0,10,1.14,C:\Users\HP\screenerpython\reports\tearsheets\NIFTY50_Daily_Momentum_Breakout_tearsheet.html
-TCS,EMA 20/50 Death Cross,-1.44,-0.42,0.07,0.1,-36.54,30.77,13,0.96,C:\Users\HP\screenerpython\reports\tearsheets\TCS_EMA_20_50_Death_Cross_tearsheet.html
-HDFCBANK,Multi-Timeframe RSI Momentum,-0.48,-0.14,0.03,0.04,-13.24,42.86,7,0.96,C:\Users\HP\screenerpython\reports\tearsheets\HDFCBANK_Multi-Timeframe_RSI_Momentum_tearsheet.html
-BANKNIFTY,High Relative Volume Breakout,0.05,0.01,0.02,0.03,-7.25,14.29,7,1.01,C:\Users\HP\screenerpython\reports\tearsheets\BANKNIFTY_High_Relative_Volume_Breakout_tearsheet.html
-RELIANCE,Multi-Timeframe RSI Momentum,-0.99,-0.29,0.0,0.01,-11.32,40.0,5,0.88,C:\Users\HP\screenerpython\reports\tearsheets\RELIANCE_Multi-Timeframe_RSI_Momentum_tearsheet.html
-NIFTY50,EMA 20 > 50 Trend Holding,-3.74,-1.12,-0.1,-0.13,-16.84,33.33,18,0.78,C:\Users\HP\screenerpython\reports\tearsheets\NIFTY50_EMA_20_GT_50_Trend_Holding_tearsheet.html
-NIFTY50,Multi-Timeframe RSI Momentum,-4.38,-1.31,-0.17,-0.21,-11.34,33.33,12,0.66,C:\Users\HP\screenerpython\reports\tearsheets\NIFTY50_Multi-Timeframe_RSI_Momentum_tearsheet.html
-TCS,High Relative Volume Breakout,-6.7,-2.02,-0.18,-0.24,-21.45,33.33,9,0.65,C:\Users\HP\screenerpython\reports\tearsheets\TCS_High_Relative_Volume_Breakout_tearsheet.html
-TCS,EMA 20 > 50 Trend Holding,-9.74,-2.97,-0.19,-0.27,-19.98,27.78,18,0.68,C:\Users\HP\screenerpython\reports\tearsheets\TCS_EMA_20_GT_50_Trend_Holding_tearsheet.html
-RELIANCE,RSI Bullish Breakout (>55),-16.65,-5.22,-0.21,-0.29,-32.12,27.59,29,0.77,C:\Users\HP\screenerpython\reports\tearsheets\RELIANCE_RSI_Bullish_Breakout_(GT55)_tearsheet.html
-RELIANCE,EMA 20/50 Golden Cross,-20.22,-6.43,-0.26,-0.37,-28.14,20.0,15,0.55,C:\Users\HP\screenerpython\reports\tearsheets\RELIANCE_EMA_20_50_Golden_Cross_tearsheet.html
-BANKNIFTY,EMA 20 > 50 Trend Holding,-11.56,-3.56,-0.26,-0.34,-23.86,25.0,28,0.68,C:\Users\HP\screenerpython\reports\tearsheets\BANKNIFTY_EMA_20_GT_50_Trend_Holding_tearsheet.html
-HDFCBANK,Minervini VCP Trend Filter,-4.93,-1.48,-0.3,-0.35,-8.32,20.0,5,0.14,C:\Users\HP\screenerpython\reports\tearsheets\HDFCBANK_Minervini_VCP_Trend_Filter_tearsheet.html
-NIFTY50,EMA 20/50 Death Cross,-14.32,-4.46,-0.36,-0.52,-20.9,33.33,12,0.32,C:\Users\HP\screenerpython\reports\tearsheets\NIFTY50_EMA_20_50_Death_Cross_tearsheet.html
-TCS,RSI Bullish Breakout (>55),-25.53,-8.31,-0.39,-0.54,-40.76,34.62,26,0.63,C:\Users\HP\screenerpython\reports\tearsheets\TCS_RSI_Bullish_Breakout_(GT55)_tearsheet.html
-TCS,EMA 20/50 Golden Cross,-24.56,-7.96,-0.4,-0.57,-32.03,30.77,13,0.38,C:\Users\HP\screenerpython\reports\tearsheets\TCS_EMA_20_50_Golden_Cross_tearsheet.html
-TCS,Daily Momentum Breakout,-18.35,-5.79,-0.45,-0.61,-29.6,26.09,23,0.54,C:\Users\HP\screenerpython\reports\tearsheets\TCS_Daily_Momentum_Breakout_tearsheet.html
-BANKNIFTY,Multi-Timeframe RSI Momentum,-10.57,-3.25,-0.46,-0.59,-16.15,22.22,9,0.2,C:\Users\HP\screenerpython\reports\tearsheets\BANKNIFTY_Multi-Timeframe_RSI_Momentum_tearsheet.html
-RELIANCE,High Relative Volume Breakout,-12.6,-3.89,-0.53,-0.63,-15.33,11.11,9,0.28,C:\Users\HP\screenerpython\reports\tearsheets\RELIANCE_High_Relative_Volume_Breakout_tearsheet.html
-HDFCBANK,EMA 20/50 Golden Cross,-32.89,-11.08,-0.56,-0.74,-39.76,28.57,14,0.36,C:\Users\HP\screenerpython\reports\tearsheets\HDFCBANK_EMA_20_50_Golden_Cross_tearsheet.html
-HDFCBANK,EMA 20 > 50 Trend Holding,-22.92,-7.38,-0.6,-0.76,-28.74,16.67,24,0.37,C:\Users\HP\screenerpython\reports\tearsheets\HDFCBANK_EMA_20_GT_50_Trend_Holding_tearsheet.html
-RELIANCE,EMA 20/50 Death Cross,-36.95,-12.7,-0.66,-0.9,-39.53,26.67,15,0.24,C:\Users\HP\screenerpython\reports\tearsheets\RELIANCE_EMA_20_50_Death_Cross_tearsheet.html
-RELIANCE,EMA 20 > 50 Trend Holding,-26.07,-8.51,-0.7,-0.91,-26.07,17.65,17,0.19,C:\Users\HP\screenerpython\reports\tearsheets\RELIANCE_EMA_20_GT_50_Trend_Holding_tearsheet.html
-HDFCBANK,EMA 20/50 Death Cross,-34.64,-11.76,-0.7,-0.93,-49.76,14.29,14,0.24,C:\Users\HP\screenerpython\reports\tearsheets\HDFCBANK_EMA_20_50_Death_Cross_tearsheet.html
-RELIANCE,Minervini VCP Trend Filter,-19.33,-6.13,-0.83,-0.94,-24.28,0.0,6,0.0,C:\Users\HP\screenerpython\reports\tearsheets\RELIANCE_Minervini_VCP_Trend_Filter_tearsheet.html
-RELIANCE,Daily Momentum Breakout,-27.78,-9.13,-0.92,-1.15,-34.51,8.7,23,0.28,C:\Users\HP\screenerpython\reports\tearsheets\RELIANCE_Daily_Momentum_Breakout_tearsheet.html
-BANKNIFTY,EMA 20/50 Death Cross,-34.92,-11.92,-0.94,-1.26,-36.96,0.0,15,0.0,C:\Users\HP\screenerpython\reports\tearsheets\BANKNIFTY_EMA_20_50_Death_Cross_tearsheet.html
+NIFTY50,Minervini VCP Trend Filter,20.5,5.66,1.02,1.51,-5.91,50.0,6,11.93,reports/tearsheets/NIFTY50_Minervini_VCP_Trend_Filter_tearsheet.html
+NIFTY50,High Relative Volume Breakout,6.08,1.76,0.63,0.93,-4.55,50.0,2,113.36,reports/tearsheets/NIFTY50_High_Relative_Volume_Breakout_tearsheet.html
+NIFTY50,EMA 20/50 Golden Cross,19.36,5.36,0.51,0.71,-18.39,54.55,11,2.31,reports/tearsheets/NIFTY50_EMA_20_50_Golden_Cross_tearsheet.html
+HDFCBANK,High Relative Volume Breakout,12.28,3.47,0.48,0.65,-9.34,55.56,9,3.02,reports/tearsheets/HDFCBANK_High_Relative_Volume_Breakout_tearsheet.html
+HDFCBANK,Daily Momentum Breakout,11.69,3.31,0.42,0.63,-8.03,31.58,19,1.66,reports/tearsheets/HDFCBANK_Daily_Momentum_Breakout_tearsheet.html
+BANKNIFTY,RSI Bullish Breakout (>55),15.33,4.3,0.37,0.52,-14.58,33.33,30,1.37,reports/tearsheets/BANKNIFTY_RSI_Bullish_Breakout_(GT55)_tearsheet.html
+BANKNIFTY,Minervini VCP Trend Filter,4.94,1.44,0.31,0.42,-6.64,40.0,5,2.1,reports/tearsheets/BANKNIFTY_Minervini_VCP_Trend_Filter_tearsheet.html
+BANKNIFTY,Daily Momentum Breakout,4.58,1.33,0.3,0.44,-7.97,25.0,12,1.49,reports/tearsheets/BANKNIFTY_Daily_Momentum_Breakout_tearsheet.html
+TCS,Minervini VCP Trend Filter,6.35,1.83,0.27,0.42,-9.85,33.33,6,1.79,reports/tearsheets/TCS_Minervini_VCP_Trend_Filter_tearsheet.html
+NIFTY50,RSI Bullish Breakout (>55),5.6,1.62,0.2,0.27,-15.99,29.63,27,1.13,reports/tearsheets/NIFTY50_RSI_Bullish_Breakout_(GT55)_tearsheet.html
+BANKNIFTY,EMA 20/50 Golden Cross,4.19,1.22,0.16,0.21,-21.11,26.67,15,1.17,reports/tearsheets/BANKNIFTY_EMA_20_50_Golden_Cross_tearsheet.html
+HDFCBANK,RSI Bullish Breakout (>55),2.03,0.59,0.12,0.17,-22.62,52.17,23,1.06,reports/tearsheets/HDFCBANK_RSI_Bullish_Breakout_(GT55)_tearsheet.html
+TCS,Multi-Timeframe RSI Momentum,1.76,0.51,0.11,0.15,-10.18,50.0,4,1.36,reports/tearsheets/TCS_Multi-Timeframe_RSI_Momentum_tearsheet.html
+NIFTY50,Daily Momentum Breakout,0.9,0.26,0.08,0.11,-8.18,20.0,10,1.14,reports/tearsheets/NIFTY50_Daily_Momentum_Breakout_tearsheet.html
+TCS,EMA 20/50 Death Cross,-1.44,-0.42,0.07,0.1,-36.54,30.77,13,0.96,reports/tearsheets/TCS_EMA_20_50_Death_Cross_tearsheet.html
+HDFCBANK,Multi-Timeframe RSI Momentum,-0.48,-0.14,0.03,0.04,-13.24,42.86,7,0.96,reports/tearsheets/HDFCBANK_Multi-Timeframe_RSI_Momentum_tearsheet.html
+BANKNIFTY,High Relative Volume Breakout,0.05,0.01,0.02,0.03,-7.25,14.29,7,1.01,reports/tearsheets/BANKNIFTY_High_Relative_Volume_Breakout_tearsheet.html
+RELIANCE,Multi-Timeframe RSI Momentum,-0.99,-0.29,0.0,0.01,-11.32,40.0,5,0.88,reports/tearsheets/RELIANCE_Multi-Timeframe_RSI_Momentum_tearsheet.html
+NIFTY50,EMA 20 > 50 Trend Holding,-3.74,-1.12,-0.1,-0.13,-16.84,33.33,18,0.78,reports/tearsheets/NIFTY50_EMA_20_GT_50_Trend_Holding_tearsheet.html
+NIFTY50,Multi-Timeframe RSI Momentum,-4.38,-1.31,-0.17,-0.21,-11.34,33.33,12,0.66,reports/tearsheets/NIFTY50_Multi-Timeframe_RSI_Momentum_tearsheet.html
+TCS,High Relative Volume Breakout,-6.7,-2.02,-0.18,-0.24,-21.45,33.33,9,0.65,reports/tearsheets/TCS_High_Relative_Volume_Breakout_tearsheet.html
+TCS,EMA 20 > 50 Trend Holding,-9.74,-2.97,-0.19,-0.27,-19.98,27.78,18,0.68,reports/tearsheets/TCS_EMA_20_GT_50_Trend_Holding_tearsheet.html
+RELIANCE,RSI Bullish Breakout (>55),-16.65,-5.22,-0.21,-0.29,-32.12,27.59,29,0.77,reports/tearsheets/RELIANCE_RSI_Bullish_Breakout_(GT55)_tearsheet.html
+RELIANCE,EMA 20/50 Golden Cross,-20.22,-6.43,-0.26,-0.37,-28.14,20.0,15,0.55,reports/tearsheets/RELIANCE_EMA_20_50_Golden_Cross_tearsheet.html
+BANKNIFTY,EMA 20 > 50 Trend Holding,-11.56,-3.56,-0.26,-0.34,-23.86,25.0,28,0.68,reports/tearsheets/BANKNIFTY_EMA_20_GT_50_Trend_Holding_tearsheet.html
+HDFCBANK,Minervini VCP Trend Filter,-4.93,-1.48,-0.3,-0.35,-8.32,20.0,5,0.14,reports/tearsheets/HDFCBANK_Minervini_VCP_Trend_Filter_tearsheet.html
+NIFTY50,EMA 20/50 Death Cross,-14.32,-4.46,-0.36,-0.52,-20.9,33.33,12,0.32,reports/tearsheets/NIFTY50_EMA_20_50_Death_Cross_tearsheet.html
+TCS,RSI Bullish Breakout (>55),-25.53,-8.31,-0.39,-0.54,-40.76,34.62,26,0.63,reports/tearsheets/TCS_RSI_Bullish_Breakout_(GT55)_tearsheet.html
+TCS,EMA 20/50 Golden Cross,-24.56,-7.96,-0.4,-0.57,-32.03,30.77,13,0.38,reports/tearsheets/TCS_EMA_20_50_Golden_Cross_tearsheet.html
+TCS,Daily Momentum Breakout,-18.35,-5.79,-0.45,-0.61,-29.6,26.09,23,0.54,reports/tearsheets/TCS_Daily_Momentum_Breakout_tearsheet.html
+BANKNIFTY,Multi-Timeframe RSI Momentum,-10.57,-3.25,-0.46,-0.59,-16.15,22.22,9,0.2,reports/tearsheets/BANKNIFTY_Multi-Timeframe_RSI_Momentum_tearsheet.html
+RELIANCE,High Relative Volume Breakout,-12.6,-3.89,-0.53,-0.63,-15.33,11.11,9,0.28,reports/tearsheets/RELIANCE_High_Relative_Volume_Breakout_tearsheet.html
+HDFCBANK,EMA 20/50 Golden Cross,-32.89,-11.08,-0.56,-0.74,-39.76,28.57,14,0.36,reports/tearsheets/HDFCBANK_EMA_20_50_Golden_Cross_tearsheet.html
+HDFCBANK,EMA 20 > 50 Trend Holding,-22.92,-7.38,-0.6,-0.76,-28.74,16.67,24,0.37,reports/tearsheets/HDFCBANK_EMA_20_GT_50_Trend_Holding_tearsheet.html
+RELIANCE,EMA 20/50 Death Cross,-36.95,-12.7,-0.66,-0.9,-39.53,26.67,15,0.24,reports/tearsheets/RELIANCE_EMA_20_50_Death_Cross_tearsheet.html
+RELIANCE,EMA 20 > 50 Trend Holding,-26.07,-8.51,-0.7,-0.91,-26.07,17.65,17,0.19,reports/tearsheets/RELIANCE_EMA_20_GT_50_Trend_Holding_tearsheet.html
+HDFCBANK,EMA 20/50 Death Cross,-34.64,-11.76,-0.7,-0.93,-49.76,14.29,14,0.24,reports/tearsheets/HDFCBANK_EMA_20_50_Death_Cross_tearsheet.html
+RELIANCE,Minervini VCP Trend Filter,-19.33,-6.13,-0.83,-0.94,-24.28,0.0,6,0.0,reports/tearsheets/RELIANCE_Minervini_VCP_Trend_Filter_tearsheet.html
+RELIANCE,Daily Momentum Breakout,-27.78,-9.13,-0.92,-1.15,-34.51,8.7,23,0.28,reports/tearsheets/RELIANCE_Daily_Momentum_Breakout_tearsheet.html
+BANKNIFTY,EMA 20/50 Death Cross,-34.92,-11.92,-0.94,-1.26,-36.96,0.0,15,0.0,reports/tearsheets/BANKNIFTY_EMA_20_50_Death_Cross_tearsheet.html

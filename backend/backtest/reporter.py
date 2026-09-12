@@ -147,7 +147,7 @@ def build_summary_dataframe(results: List[Dict[str, Any]]) -> pd.DataFrame:
             "Win Rate (%)": m.get("Win Rate (%)", 0.0),
             "Trades": m.get("Total Trades", 0),
             "Profit Factor": m.get("Profit Factor", 0.0),
-            "Tearsheet": res.get("tearsheet_path", "")
+            "Tearsheet": f"reports/tearsheets/{Path(res.get('tearsheet_path', '')).name}" if res.get("tearsheet_path") else ""
         })
     df = pd.DataFrame(rows)
     if not df.empty:
