@@ -1,215 +1,169 @@
-﻿# 📈 NSE Stock Screener
+# 📈 NSE Stock Screener & Quantitative Terminal
 
-> A powerful, real-time Indian stock screener with TradingView-style condition builders, live candlestick charts, and 12+ premade scans — built with FastAPI + React.
+> An institutional-grade, real-time Indian stock screener (NSE/BSE) featuring live TradingView indicators, Indian market ADR volatility extension gauges, 32 PKScreener momentum algorithms, Minervini VCP pattern detection, multi-pane Lightweight Charts v5, and a full VectorBT + QuantStats quantitative backtesting lab.
 
-![Tech Stack](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square&logo=fastapi)
-![Frontend](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61DAFB?style=flat-square&logo=react)
-![Data](https://img.shields.io/badge/Data-TradingView%20%2B%20yFinance-orange?style=flat-square)
-![DB](https://img.shields.io/badge/Database-SQLite-blue?style=flat-square&logo=sqlite)
-![Python](https://img.shields.io/badge/Python-3.11%2B-yellow?style=flat-square&logo=python)
-
----
-
-## 🚀 Features
-
-### 📊 Live Market Dashboard
-- Real-time NSE stock data powered by **TradingView Screener API** via `tvscreener`
-- Live table with RSI, MACD, EMA 20/50/200, ADX, Bollinger Bands, ATR, Stochastic RSI and more
-- **Deduplication**: NSE listings always preferred over BSE duplicates
-
-### 🔍 Custom Scanner Builder
-- Build multi-condition scanners with an intuitive rule builder
-- Supports **crossover / crossunder** operators (e.g., EMA 20 crosses above EMA 50)
-- **Stepper buttons** (+/−) to fine-tune numeric threshold values
-- Timeframe selector: `5m`, `15m`, `30m`, `1H`, `4H`, `1D`, `1WK`, `1MO`
-- Universe picker: **NSE 500**, **F&O Stocks**, **Large / Mid / Small / Micro Cap**
-
-### 📦 Premade Scanners (12 built-in)
-| Category | Scanners |
-|----------|----------|
-| 🟢 **Bullish** | RSI Momentum (55–75), Golden Cross, Price Above All EMAs, MACD Crossover |
-| 🔴 **Bearish** | RSI Overbought (>70), Death Cross, EMA Crossunder, RSI Oversold (<30) |
-| ⚡ **Momentum** | ADX Strong Trend, 52-Week High Breakout, Trend Riding (F&O), RSI+MACD Dual Confirm |
-
-### 🕯️ Candlestick Charts
-- Click any stock row → full candlestick chart powered by `lightweight-charts` v5
-- Configurable timeframe (5m to 1MO)
-- Overlaid EMA 20 and EMA 50 lines
-- Automatic NSE suffix mapping (.NS) with BSE fallback (.BO)
-
-### 🌐 Market Universes
-| Universe | Description |
-|----------|-------------|
-| `nse500` | Top 500 NSE-listed companies by market cap |
-| `fno` | NSE F&O eligible stocks (~200 liquid derivatives) |
-| `largecap` | Market cap > ₹20,000 Cr |
-| `midcap` | Market cap ₹4,000–₹20,000 Cr |
-| `smallcap` | Market cap ₹800–₹4,000 Cr |
-| `microcap` | Market cap < ₹800 Cr |
+[![Backend](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square&logo=fastapi)](http://127.0.0.1:8009/docs)
+[![Frontend](https://img.shields.io/badge/Frontend-React%2019%20%2B%20Vite%208-61DAFB?style=flat-square&logo=react)](http://localhost:5180)
+[![Charting](https://img.shields.io/badge/Charts-Lightweight%20Charts%20v5-blue?style=flat-square)](https://tradingview.github.io/lightweight-charts/)
+[![Backtest](https://img.shields.io/badge/Backtest-VectorBT%20%2B%20QuantStats-green?style=flat-square)](https://vectorbt.dev/)
+[![Database](https://img.shields.io/badge/Database-SQLite-blue?style=flat-square&logo=sqlite)](#architecture)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-yellow?style=flat-square&logo=python)](#setup--quickstart)
 
 ---
 
-## 🏗️ Architecture
+## 📸 Platform Screenshots
 
-```
-screenerpython/
-├── backend/
-│   ├── main.py                 # API routes & app entry point
-│   ├── tvscreener_service.py   # Live data from TradingView Screener
-│   ├── ohlcv_service.py        # Historical OHLCV via yfinance
-│   ├── scanner_engine.py       # Rule evaluation & match logic
-│   ├── indicators.py           # Indicator field resolution helpers
-│   ├── symbol_sync.py          # NSE symbol list sync & cache
-│   └── database.py             # SQLite schema & connection manager
-│
-├── frontend/
-│   ├── src/
-│   │   ├── App.jsx             # Main UI (dashboard, builder, chart)
-│   │   ├── api.js              # API client (fetch wrappers)
-│   │   ├── index.css           # Dark-mode design system
-│   │   └── useToast.js         # Toast notification hook
-│   └── vite.config.js          # Vite config with /api proxy → :8009
-│
-├── scanner.db                  # SQLite database
-└── requirements.txt
-```
+### 1. Real-Time Screener, Multi-Pane Chart & Indian Market ADR Gauge
+*Live stock scanner table with `% From Low` and `ADR Used` metrics, multi-indicator chart (Candlesticks, Volume, EMA 20/50, RSI 14, MACD, Strike Levels), and the expanded **Indian Market Context & Risk Assessment** banner.*
 
-### Data Flow
-```
-Browser → Vite (:5180) → [/api/*] proxy → FastAPI (:8009)
-                                           ├── tvscreener → TradingView (live indicators)
-                                           └── yfinance   → Yahoo Finance (OHLCV charts)
-```
+![Live Screener and ADR Context](docs/screenshots/01_live_screener_adr_context.png)
 
 ---
 
-## ⚙️ Setup & Installation
+### 2. Universal Categorized Scanner Rules Dropdown
+*Instant access to Live Movers, Buy & Reversal Signals, PKScreener Momentum Algorithms, Minervini VCP Patterns, RRG Relative Rotation, and the new **ADR Expansion** setup finder.*
+
+![Scanner Categories Dropdown](docs/screenshots/02_scanner_categories_dropdown.png)
+
+---
+
+### 3. Quantitative Backtesting Lab & Performance Overview
+*Vectorized simulation suite powered by **VectorBT** and **QuantStats** showing cumulative returns, Sharpe ratio, Win Rate, Profit Factor, Alpha, and monthly returns heatmap.*
+
+![Backtest Lab Performance Overview](docs/screenshots/03_backtest_lab_results.png)
+
+---
+
+### 4. Portfolio Equity Growth & Underwater Drawdown Profiles
+*High-resolution equity curve benchmarked directly against NIFTY 50 alongside drawdown depth and recovery timeframes.*
+
+![Equity Curve and Drawdown](docs/screenshots/04_backtest_lab_equity_curve.png)
+
+---
+
+## 🌟 Core Features
+
+### 🇮🇳 1. Indian Market ADR & Intraday Range Extension
+Tailored specifically for Indian equities where high retail participation, high ADRs (4%–10%+), and SEBI circuit limits (5%, 10%, 20%) can suddenly cap breakouts:
+
+- **% Change from Low (LOD)**:
+  $$\left( \frac{\text{Current Price} - \text{LOD}}{\text{LOD}} \right) \times 100$$
+  *Identifies early reversals vs. late-chasing breakouts.*
+- **ADR % from LOD (Dynamic Gauge Bar)**:
+  $$\left( \frac{\text{Current Price} - \text{LOD}}{\text{14-Day ADR (₹)}} \right) \times 100$$
+  - **🟢 Early Expansion ($<40\%$)**: Favorable entry; tight stop to LOD in rupee terms.
+  - **🟡 Active Momentum ($40\% - 70\%$)**: Expansion underway; trail stops closely.
+  - **🔴 Over-Extended ($>70\%$)**: Late entry alert; statistically poor risk/reward with elevated pullback risk.
+- **Previous-Day Range < ADR Check**:
+  $$\text{Yesterday's Range } (High_{prev} - Low_{prev}) < 14\text{D ADR}$$
+  - `✓ Tight < ADR`: Prior day volatility contraction preceding explosive moves.
+  - `⚠ Wide ≥ ADR`: Prior day volatility expansion indicating potential consolidation today.
+- **Indian Market Context Advisory Card**: Contextual guidance on circuit limit caps and logical stop placement.
+
+---
+
+### 🔍 2. Universal Scanner Framework
+- **⚡ Live Movers**: Top Gainers, Top Losers, and Volume Shockers.
+- **🎯 ADR Contraction & Expansion**: Screen stocks initiating expansion after tight prior sessions.
+- **📈 32 PKScreener Algorithmic Scans**:
+  - *Bullish / Reversals*: Golden Cross (50/200), 5-EMA Intraday Reversal, RSI Range Shift, Bullish Engulfing, Morning Star, Support Bounce, PSAR Bullish Flip, Aroon Up Trend.
+  - *Bearish / Breakdowns*: Death Cross, EMA 20/50 Crossunder, Overbought RSI Climax, Bearish Engulfing, Breakdown through Support.
+  - *Volume & Breakouts*: Volume Shockers (>3x average), Consolidation Breakouts, 52-Week High Breakouts.
+- **🔺 Mark Minervini VCP Patterns**: Multi-stage contraction detection ($2T, 3T, 4T$) coupled with Mark Minervini's 8-point Trend Template criteria.
+- **🔄 RRG Relative Rotation**: Sector and stock momentum ranking (*Leading, Improving, Weakening, Lagging*) benchmarked to NIFTY 50.
+- **⚖️ Key Option Strike Levels**: Automated calculations for Immediate Support, Resistance, and Max Pain strikes.
+
+---
+
+### 📊 3. Interactive Charting (Lightweight Charts v5)
+- Multi-pane synchronized charting engine:
+  - **Main Chart**: Candlesticks, Volume Histogram, EMA 20, EMA 50, Strike Levels.
+  - **Sub-Chart 1**: RSI (14) with overbought (70) and oversold (30) reference lines.
+  - **Sub-Chart 2**: MACD Level, Signal Line, and zero-centered Histogram.
+- Full timeframe support: `5m`, `15m`, `30m`, `1H`, `4H`, `1D`, `1WK`, `1MO`.
+- Intelligent symbol resolution: Automatic `.NS` / `.BO` routing and index mapping (`^NSEI`, `^NSEBANK`, `^BSESN`).
+
+---
+
+### 🧪 4. Quantitative Backtesting Lab (VectorBT + QuantStats)
+- **Vectorized Backtests**: Fast multi-year simulations with realistic trading fees (0.05%) and slippage (0.05%).
+- **Interactive Metric Cards**: Total Return, Benchmark Return, Sharpe Ratio, Sortino Ratio, Max Drawdown, Calmar Ratio, Profit Factor, and Alpha.
+- **QuantStats HTML Tearsheets**: Embedded standalone tearsheets featuring monthly returns heatmaps, rolling volatility, and Monte Carlo drawdowns.
+
+---
+
+## 🏛️ Architecture & Data Flow
+
+```
+Browser (React + Vite :5180)
+      │
+      ▼ [/api/* proxy]
+FastAPI Backend (:8009)
+      ├── tvscreener (TradingView API) ──► Live Indicators & Real-time Prices
+      ├── yfinance                     ──► Candlestick OHLCV & Backtesting Data
+      └── SQLite (scanner.db)          ──► Saved Scans, OHLCV Cache & Range Stats
+```
+
+| Component | Responsibility | Key File |
+|-----------|----------------|----------|
+| **API Layer** | FastAPI endpoints & request validation | [backend/main.py](backend/main.py) |
+| **Live Engine** | TradingView live screener data & ADR metrics | [backend/tvscreener_service.py](backend/tvscreener_service.py) |
+| **OHLCV Engine** | yfinance historical data, cache & ADR stats | [backend/ohlcv_service.py](backend/ohlcv_service.py) |
+| **Scanner Registry** | Universal dispatch for all scanner types | [backend/scanner_registry.py](backend/scanner_registry.py) |
+| **Pattern Engine** | Minervini VCP pattern recognition | [backend/vcp_service.py](backend/vcp_service.py) |
+| **Backtest Engine**| VectorBT simulation & QuantStats reporting | [backend/backtest/engine.py](backend/backtest/engine.py) |
+| **Frontend App** | UI layout, active state & view switching | [frontend/src/App.jsx](frontend/src/App.jsx) |
+| **Chart Component**| Multi-pane lightweight-charts v5 & ADR bar | [frontend/src/components/ChartPanel.jsx](frontend/src/components/ChartPanel.jsx) |
+| **Scanner Panel** | Filter controls, stock table & sort handlers | [frontend/src/components/ScannerPanel.jsx](frontend/src/components/ScannerPanel.jsx) |
+
+---
+
+## ⚙️ Setup & Quickstart
 
 ### Prerequisites
-- Python 3.11+
-- Node.js 18+
+- **Python**: 3.11 or newer
+- **Node.js**: 18 or newer
 
-### 1. Clone & Install Backend
+### 1. Clone the Repository
 ```bash
-python -m venv .venv
-.venv\Scripts\activate          # Windows
-pip install -r requirements.txt
+git clone https://github.com/piyushk20/screenerpython.git
+cd screenerpython
 ```
 
-### 2. Install Frontend
+### 2. Backend Setup
+```bash
+# Create and activate virtual environment
+python -m venv .venv
+.venv\Scripts\activate      # Windows (PowerShell/cmd)
+# source .venv/bin/activate # macOS/Linux
+
+# Install backend dependencies
+pip install -r requirements.txt
+
+# Start FastAPI backend
+python -m uvicorn backend.main:app --host 127.0.0.1 --port 8009
+```
+
+### 3. Frontend Setup
+In a separate terminal window:
 ```bash
 cd frontend
 npm install
-```
-
----
-
-## 🏃 Running the App
-
-### Backend (FastAPI)
-```bash
-.venv\Scripts\python -m uvicorn backend.main:app --host 127.0.0.1 --port 8009
-```
-- API Base: `http://127.0.0.1:8009`
-- Swagger Docs: `http://127.0.0.1:8009/docs`
-
-### Frontend (Vite Dev Server)
-```bash
-cd frontend
 npm run dev
-# Opens: http://localhost:5180
 ```
+
+### 4. Access the Application
+- **Terminal Web App**: [http://localhost:5180](http://localhost:5180)
+- **Backend Health Check**: [http://127.0.0.1:8009/health](http://127.0.0.1:8009/health)
+- **Interactive Swagger Docs**: [http://127.0.0.1:8009/docs](http://127.0.0.1:8009/docs)
 
 ---
 
-## 📡 API Reference
-
-### Live Snapshot
-```
-GET /api/live?timeframe=1D&limit=200&universe=nse500
-```
-| Param | Options | Default |
-|-------|---------|---------|
-| `timeframe` | `5m` `15m` `30m` `1H` `4H` `1D` `1WK` `1MO` | `1D` |
-| `limit` | 1–500 | `200` |
-| `universe` | `nse500` `fno` `largecap` `midcap` `smallcap` `microcap` | `nse500` |
-
-### OHLCV Chart Data
-```
-GET /api/ohlcv/{symbol}?interval=1d&period=6mo
-```
-
-### Scanners CRUD
-```
-GET    /api/scanners              # List all scanners
-POST   /api/scanners              # Create scanner
-PUT    /api/scanners/{id}         # Update scanner
-DELETE /api/scanners/{id}         # Delete scanner
-POST   /api/scanners/{id}/run     # Run scanner & store results
-GET    /api/scanners/{id}/results # Get last run results
-```
+## 📚 Further Documentation
+- **[TODO.md](TODO.md)**: Detailed feature roadmap, completed milestones, and upcoming developments.
+- **[ABOUT.md](ABOUT.md)**: Deep dive into the project vision, market microstructures, and ADR trading philosophy.
 
 ---
 
-## 🛠️ Supported Indicators
-
-| Indicator | Operators | Notes |
-|-----------|-----------|-------|
-| RSI | `>` `<` `>=` `<=` `==` | Length: 7, 14, 21 |
-| EMA | All + `crosses_above` `crosses_below` | Any length |
-| MACD | `>` `<` `==` | 12/26/9 params |
-| ADX | `>` `<` | Length 14 |
-| Bollinger Bands | `>` `<` | Upper/Lower |
-| ATR | `>` `<` | True Range |
-| Stochastic RSI | `>` `<` | 3,3,14,14 |
-| Volume | `>` `<` | Absolute |
-
----
-
-## 🎨 Design System
-
-Dark-mode CSS custom properties:
-
-```css
---color-bg          #0d1117   (Main background)
---color-surface     #161b22   (Card surfaces)
---color-border      #30363d   (Borders)
---color-accent      #58a6ff   (Primary accent)
---color-success     #3fb950   (Green)
---color-danger      #f85149   (Red)
---color-warning     #d29922   (Amber)
---color-text        #e6edf3   (Primary text)
---color-text-dim    #8b949e   (Muted text)
-```
-
----
-
-## 🔄 Known Behaviours
-
-| Issue | Resolution |
-|-------|-----------|
-| Indian tickers need `.NS` suffix in yfinance | `ohlcv_service.py` auto-appends, falls back to `.BO` |
-| BSE/NSE duplicate rows in screener | Deduplicated by company name — NSE entry kept |
-| `lightweight-charts` v5 API change | Uses `chart.addSeries(CandlestickSeries)` — not legacy methods |
-
----
-
-## 📦 Key Dependencies
-
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `fastapi` | 0.141.1 | REST API |
-| `uvicorn` | 0.52.1 | ASGI server |
-| `tvscreener` | 0.4.0 | TradingView screener client |
-| `yfinance` | 1.5.2 | Historical OHLCV |
-| `pandas` | 3.0.5 | Data processing |
-| `APScheduler` | 3.11.3 | Background jobs |
-| `ta` | 0.11.0 | Technical indicators |
-| `lightweight-charts` | v5 | Candlestick charts |
-| `react` + `vite` | 18+ / 8.x | Frontend |
-
----
-
-## 📝 License
-
-MIT — free to use, modify and distribute.
+## 📄 License
+MIT License. Built for Indian quantitative and technical market research.
