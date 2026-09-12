@@ -79,6 +79,11 @@ export default function OptionChainModal({ symbol, onClose, onTradeStrike }) {
                   <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 4, background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
                     Lot: {data?.lot_size || 100}
                   </span>
+                  {data?.contract_type && (
+                    <span style={{ fontSize: 10.5, fontWeight: 700, padding: '2px 8px', borderRadius: 4, background: data.contract_type.includes('Weekly') ? 'rgba(34, 197, 94, 0.15)' : 'rgba(168, 85, 247, 0.15)', color: data.contract_type.includes('Weekly') ? '#4ade80' : '#c084fc', border: `1px solid ${data.contract_type.includes('Weekly') ? 'rgba(34, 197, 94, 0.3)' : 'rgba(168, 85, 247, 0.3)'}` }}>
+                      {data.contract_type}
+                    </span>
+                  )}
                 </div>
                 <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: 2 }}>
                   Spot Price: <strong style={{ color: 'var(--accent-primary)', fontSize: 13 }}>₹{data?.spot_price?.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</strong>
@@ -100,11 +105,17 @@ export default function OptionChainModal({ symbol, onClose, onTradeStrike }) {
                     onChange={e => setSelectedExpiry(e.target.value)}
                     style={{ padding: '5px 10px', fontSize: '12px', borderRadius: 6, background: '#1e293b', color: '#f8fafc', borderColor: '#334155' }}
                   >
-                    {data.available_expiries.map(exp => (
-                      <option key={exp} value={exp}>
-                        {exp} ({data.target_expiry === exp ? 'Current' : 'Next'})
-                      </option>
-                    ))}
+                    {data.available_expiries.map((exp, idx) => {
+                      const isMonthly = data.contract_type?.includes('Monthly');
+                      const label = isMonthly
+                        ? (idx === 0 ? ' (Near-Month)' : idx === 1 ? ' (Next-Month)' : ' (Far-Month)')
+                        : (idx === 0 ? ' (Current Weekly)' : idx === 1 ? ' (Next Weekly)' : ` (+${idx}W)`);
+                      return (
+                        <option key={exp} value={exp}>
+                          {exp}{label}
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
               )}

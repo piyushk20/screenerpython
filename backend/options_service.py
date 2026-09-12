@@ -495,8 +495,110 @@ def calculate_historical_volatility(symbol: str, days: int = 30) -> float:
 
 
 # ---------------------------------------------------------------------------
-# Option Chain Data Generator & Real-Time Assembler
+# Option Chain Expiry Calendar & Real-Time Assembler
 # ---------------------------------------------------------------------------
+
+import calendar
+
+# Accurate Indian Market Weekly Index Expiry Schedule (0=Mon, 1=Tue, 2=Wed, 3=Thu, 4=Fri)
+INDEX_WEEKLY_EXPIRY_DAYS: Dict[str, int] = {
+    "NIFTY": 3,           # Thursday Weekly
+    "NIFTY 50": 3,        # Thursday Weekly
+    "^NSEI": 3,
+    "BANKNIFTY": 2,       # Wednesday Weekly
+    "BANK NIFTY": 2,      # Wednesday Weekly
+    "^NSEBANK": 2,
+    "FINNIFTY": 1,        # Tuesday Weekly
+    "FIN NIFTY": 1,       # Tuesday Weekly
+    "NIFTY_FIN_SERVICE": 1,
+    "MIDCPNIFTY": 0,      # Monday Weekly
+    "NIFTY MIDCAP": 0,    # Monday Weekly
+    "^NSEMDCP50": 0,
+    "SENSEX": 4,          # Friday Weekly (BSE)
+    "^BSESN": 4,
+    "BANKEX": 0,          # Monday Weekly (BSE)
+    "^BSEBANK": 0,
+}
+
+
+def _get_last_weekday_of_month(year: int, month: int, weekday: int = 3) -> datetime:
+    """Calculate the last given weekday (default Thursday=3) of a given month."""
+    last_day = calendar.monthrange(year, month)[1]
+    dt = datetime(year, month, last_day)
+    while dt.weekday() != weekday:
+        dt -= timedelta(days=1)
+    return dt
+
+
+def _get_monthly_stock_expiries(count: int = 3, weekday: int = 3) -> List[str]:
+    """
+    Generate valid monthly expiry dates (Last Thursday of the month)
+    for NSE Equity Stock options and Sectoral Indices (Near-Month, Next-Month, Far-Month).
+    """
+    today = datetime.now()
+    expiries = []
+    y, m = today.year, today.month
+    
+    for _ in range(count + 3):
+        exp_dt = _get_last_weekday_of_month(y, m, weekday)
+        # If today is expiry day after 15:30 IST, roll over to next month
+        is_today_past_cutoff = (
+            exp_dt.date() == today.date() and
+            (today.hour > 15 or (today.hour == 15 and today.minute >= 30))
+        )
+        if exp_dt.date() > today.date() or (exp_dt.date() == today.date() and not is_today_past_cutoff):
+            expiries.append(exp_dt.strftime("%Y-%m-%d"))
+            if len(expiries) == count:
+                break
+        m += 1
+        if m > 12:
+            m = 1
+            y += 1
+    return expiries
+
+
+def _get_weekly_index_expiries(weekday: int, count: int = 4) -> List[str]:
+    """
+    Generate upcoming weekly expiry dates for major benchmark index contracts.
+    """
+    today = datetime.now()
+    days_ahead = weekday - today.weekday()
+    
+    # If today is expiry day but after 15:30 IST, roll over to next week
+    is_today_past_cutoff = (
+        days_ahead == 0 and
+        (today.hour > 15 or (today.hour == 15 and today.minute >= 30))
+    )
+    if days_ahead < 0 or is_today_past_cutoff:
+        days_ahead += 7
+
+    first_exp = today + timedelta(days=days_ahead)
+    expiries = []
+    for i in range(count):
+        exp_date = first_exp + timedelta(weeks=i)
+        expiries.append(exp_date.strftime("%Y-%m-%d"))
+    return expiries
+
+
+def get_contract_expiries(symbol: str) -> Tuple[List[str], str]:
+    """
+    Determine exact valid Indian market expiry dates and contract cycle type:
+    - Weekly Indices: NIFTY (Thu), BANKNIFTY (Wed), FINNIFTY (Tue), MIDCPNIFTY (Mon), SENSEX (Fri)
+    - Stock Options & Sectoral Indices: Monthly contracts expiring on the Last Thursday of the month.
+    """
+    clean_sym = symbol.strip().upper().replace(".NS", "").replace("^", "")
+
+    if clean_sym in INDEX_WEEKLY_EXPIRY_DAYS:
+        weekday = INDEX_WEEKLY_EXPIRY_DAYS[clean_sym]
+        expiries = _get_weekly_index_expiries(weekday=weekday, count=4)
+        contract_type = "Weekly Index Options"
+    else:
+        # Stock Options & Sectoral Indices (Monthly Expiries on Last Thursday)
+        expiries = _get_monthly_stock_expiries(count=3, weekday=3)
+        contract_type = "Monthly Stock / Sectoral Options"
+
+    return expiries, contract_type
+
 
 def _derive_strike_step(spot: float) -> float:
     """Determine standard NSE strike spacing based on underlying spot price."""
@@ -514,21 +616,6 @@ def _derive_strike_step(spot: float) -> float:
         return 5.0
     else:
         return 2.5
-
-
-def _get_next_thursdays(count: int = 4) -> List[str]:
-    """Generate upcoming Thursday expiry dates in YYYY-MM-DD format."""
-    expiries = []
-    today = datetime.now()
-    days_ahead = 3 - today.weekday()  # Thursday is weekday 3
-    if days_ahead <= 0:
-        days_ahead += 7
-    first_thursday = today + timedelta(days=days_ahead)
-    
-    for i in range(count):
-        exp_date = first_thursday + timedelta(weeks=i)
-        expiries.append(exp_date.strftime("%Y-%m-%d"))
-    return expiries
 
 
 def fetch_option_chain(symbol: str, expiry: Optional[str] = None) -> Dict[str, Any]:
@@ -557,8 +644,8 @@ def fetch_option_chain(symbol: str, expiry: Optional[str] = None) -> Dict[str, A
         else:
             spot_price = 1000.0
 
-    # 2. Expiry dates
-    expiries = _get_next_thursdays(4)
+    # 2. Expiry dates & Contract Type (Accurate Indian Market Rules)
+    expiries, contract_type = get_contract_expiries(clean_sym)
     target_expiry = expiry if expiry and expiry in expiries else expiries[0]
 
     # Calculate Time-To-Expiry in years
@@ -679,6 +766,7 @@ def fetch_option_chain(symbol: str, expiry: Optional[str] = None) -> Dict[str, A
 
     return {
         "symbol": clean_sym,
+        "contract_type": contract_type,
         "spot_price": round(spot_price, 2),
         "target_expiry": target_expiry,
         "days_to_expiry": days_to_exp,
