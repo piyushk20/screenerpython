@@ -92,6 +92,29 @@ Tailored specifically for Indian equities where high retail participation, high 
 
 ---
 
+### ⚡ 5. Real-Time Option Chain & Greeks Ladder
+- **Pure-Python Analytical Black-Scholes Greeks**: Delta ($\Delta$), Gamma ($\Gamma$), Theta ($\Theta$), and Vega ($\mathcal{V}$) for liquid weekly/monthly NSE strikes.
+- **Max Pain & Put-Call Ratio (PCR)**: Dynamic strike solver pinpointing maximum option buyer expiration loss and total/strike PCR sentiment.
+- **Implied Volatility (IV) Analytics**: Newton-Raphson numerical solver, 30-day Historical Volatility (HV), IV Rank (IVR), and IV Percentile (IVP).
+- **Interactive Strike Ladder**: Visual Call/Put OI magnitude bars, ATM highlight badges, and 1-click execution routing.
+
+---
+
+### 🔔 6. Real-Time Alerts & Multi-Channel Webhooks
+- **Background Evaluation Engine**: Periodic market-hours scheduler checking active triggers with 15-minute anti-spam cooldowns.
+- **Telegram Bot Dispatcher**: Automated trade signals formatted in Markdown with price, ADR % from LOD, and chart link.
+- **Discord Webhooks**: Rich embed cards with color-coded severity (Green = Breakout, Red = Breakdown, Orange = ADR Climax).
+- **Desktop Push Notifications**: HTML5 Notifications API integration for native OS alerts.
+
+---
+
+### 💼 7. Paper Trading & Broker Integration (Dhan HQ)
+- **Zero-Risk Paper Trading**: Simulated ₹1,000,000 portfolio with 0.05% slippage, exchange fees, and live Mark-to-Market (MTM) P&L tracking.
+- **Dhan HQ Open API v2 Adapter**: Live order placement (Regular, Intraday MIS, Delivery CNC, SL/SL-M) and margin inquiry.
+- **Trading Desk UI**: Quick-order drawer directly on chart and screener rows with 1-click "Square Off All" safety control.
+
+---
+
 ## 🏛️ Architecture & Data Flow
 
 ```
