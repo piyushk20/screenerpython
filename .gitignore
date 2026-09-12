@@ -1,0 +1,41 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+.npm/
+
+# Database & SQLite
+scanner.db
+*.db
+*.sqlite3
+
+# Reports & Tearsheets
+reports/tearsheets/*.html
+!reports/tearsheets/.gitkeep
+
+# Cloned helper repositories
+agency-agents/
+graphify/
+mem0/
+PKScreener/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.kilo/
